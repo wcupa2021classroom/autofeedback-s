@@ -8,7 +8,7 @@ Each time code is pushed to GitHub with the necessary .github directory elements
 An example [.github](resources/.github) directory is included in the [resources](resources) directory of this repo.
 
 ### TLDR
-- Copy the [.github] directory (contained in [resources](resources) to the top level of the repository to be graded.
+- Copy the .github directory (contained in [resources](resources)) to the top level of the repository to be graded.
 - Update the test descriptions in [.github/classroom/autograding.json](resources/.github/classroom/autograding.json) to align with what you want to assess.
 
 
