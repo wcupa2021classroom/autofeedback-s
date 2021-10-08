@@ -7,6 +7,10 @@ The autograder is a GitHub Action that must be triggered as part of a CI workflo
 Each time code is pushed to GitHub with the necessary .github directory elements present, a build will begin that will involve running the tests.
 An example [.github](resources/.github) directory is included in the [resources](resources) directory of this repo.
 
+### TLDR
+- Copy the [.github] directory (contained in [resources](resources) to the top level of the repository to be graded.
+- Update the test descriptions in [.github/classroom/autograding.json](resources/.github/classroom/autograding.json) to align with what you want to assess.
+
 
 ### Files needed
 - This runner will compare results of commands against expected output, or simply utilize the output code of a program.
@@ -28,6 +32,15 @@ An example [.github](resources/.github) directory is included in the [resources]
 	- extra: This attribute should be present (and set to `true`) only if the test is considered extra credit and should not count toward the total points possible.
 - The output from the test suite that would be run by [resources/.github](resources/.github) will look like this:\
 ![Output screenshot from test runner](resources/runner-output.png)
+
+### Extras
+To add a current score badge to the repository homepage, add the following line near the top of the project README.md.
+This will display the point total for the most recent push and when clicked will link to the Actions page for the repository.
+The badge is created by workflow actions in the example [.github/workflows/classroom.yml](resources/.github/workflows/classroom.yml).
+Changes to that file may break this setup.
+```md
+[![Points badge](../../blob/badges/.github/badges/points.svg)](../../actions)
+```
 
 ## Contributing
 
