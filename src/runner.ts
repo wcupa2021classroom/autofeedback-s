@@ -228,12 +228,12 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
         points += test.points
       }
     } catch (error) {
-      if (!test.extra) {
-        failed = true
-      }
       log('')
       log(color.red(`❌ ${test.name}`))
-      core.setFailed(error.message)
+      if (!test.extra) {
+        failed = true
+        core.setFailed(error.message)
+      }
     }
   }
 
