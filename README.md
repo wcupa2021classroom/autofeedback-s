@@ -1,4 +1,6 @@
 # stevenbitner/autograding
+![CI Build](https://github.com/github/docs/actions/workflows/ci.yml/badge.svg)
+
 - This repo is forked from https://github.com/education/autograding/.
 - The source repository has not been updated in a long time, so I'm hoping to fix a few issues in this repo.
 
@@ -38,6 +40,7 @@ As such, if you are going through any part of the process from this action repos
 ![Output screenshot from test runner](resources/runner-output.png)
 
 ### Extras
+#### Current Score Badge on README
 To add a current score badge to the repository homepage, add the following line near the top of the project README.md.
 This will display the point total for the most recent push and when clicked will link to the Actions page for the repository.
 The badge is created by workflow actions in the example [.github/workflows/classroom.yml](resources/.github/workflows/classroom.yml).
@@ -46,8 +49,11 @@ Changes to that file may break this setup.
 [![Points badge](../../blob/badges/.github/badges/points.svg)](../../actions)
 ```
 
-## Contributing
+#### Running locally with Docker
+- Get the Docker image here https://hub.docker.com/repository/docker/sbitner/github-action-runner. 
+	- Follow the directions in that README
 
+## Contributing
 ### Unit Tests
 - Unit test suites are in [src/__tests__](src/__tests__).
 	- Adding functionality? Add a test.
