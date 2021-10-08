@@ -55,7 +55,7 @@ Changes to that file may break this setup.
 
 ## Contributing
 ### Unit Tests
-- Unit test suites are in [src/__tests__](src/__tests__).
+- Unit test suites are in [src/\_\_tests\_\_](src/__tests__).
 	- Adding functionality? Add a test.
 	- Running the tests is easy, simply run `npm test` at the top level of the repository.
 
