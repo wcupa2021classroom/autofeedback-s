@@ -221,7 +221,7 @@ describe('runAll', () => {
         output: undefined,
         comparison: 'exact' as TestComparison,
         timeout: 1,
-		extra: true,
+        extra: true,
         points: 3,
       },
       {
@@ -232,7 +232,7 @@ describe('runAll', () => {
         output: 'Fail this test',
         comparison: 'exact' as TestComparison,
         timeout: 1,
-		extra: true,
+        extra: true,
         points: 5,
       },
     ]
