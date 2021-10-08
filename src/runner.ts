@@ -252,7 +252,7 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
   }
 
   if (points > availablePoints) {
-    const extraCreditPoints = points - availablePoints
+    const extraCreditPoints = 1 * (points - availablePoints)
     log(`💪💪💪 You earned ${extraCreditPoints} extra credit points`)
     log('')
   }
