@@ -16,7 +16,7 @@ jobs:
           fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
 
       # add id to action so outputs can be used
-      - uses: stevenbitner/autograding@master
+      - uses: stevenbitner/autograding@v1.1
         id: autograder
         continue-on-error: true
 
@@ -59,4 +59,4 @@ jobs:
           force: true
       - name: Check on failures
         if: steps.autograder.outcome == 'failure'
-        run: echo "Not all tests in stevenbitner/autograding@master passed" && exit 1
+        run: echo "Not all tests in stevenbitner/autograding@v1.1 passed" && exit 1
