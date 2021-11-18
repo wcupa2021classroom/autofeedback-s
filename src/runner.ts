@@ -222,14 +222,14 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
       log('')
       await run(test, cwd)
       log('')
-      log(color.green(`✅ ${test.name}`))
+      log(color.green(`✅ completed - ${test.name}`))
       log(``)
       if (test.points) {
         points += test.points
       }
     } catch (error) {
       log('')
-      log(color.red(`❌ ${test.name}`))
+      log(color.red(`❌ failed - ${test.name}`))
       if (!test.extra) {
         failed = true
         core.setFailed(error.message)
