@@ -623,20 +623,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.setCheckRunOutput = void 0;
 const core = __importStar(__webpack_require__(470));
 const github = __importStar(__webpack_require__(469));
-const setCheckRunOutput = (text) => __awaiter(void 0, void 0, void 0, function* () {
+const setCheckRunOutput = async (text) => {
     // If we have nothing to output, then bail
     if (text === '')
         return;
@@ -663,7 +654,7 @@ const setCheckRunOutput = (text) => __awaiter(void 0, void 0, void 0, function* 
     if (Number.isNaN(runId))
         return;
     // Fetch the workflow run
-    const workflowRunResponse = yield octokit.actions.getWorkflowRun({
+    const workflowRunResponse = await octokit.actions.getWorkflowRun({
         owner,
         repo,
         run_id: runId,
@@ -672,7 +663,7 @@ const setCheckRunOutput = (text) => __awaiter(void 0, void 0, void 0, function* 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const checkSuiteUrl = workflowRunResponse.data.check_suite_url;
     const checkSuiteId = parseInt(checkSuiteUrl.match(/[0-9]+$/)[0], 10);
-    const checkRunsResponse = yield octokit.checks.listForSuite({
+    const checkRunsResponse = await octokit.checks.listForSuite({
         owner,
         repo,
         check_name: 'Autograding',
@@ -684,7 +675,7 @@ const setCheckRunOutput = (text) => __awaiter(void 0, void 0, void 0, function* 
     // Update the checkrun, we'll assign the title, summary and text even though we expect
     // the title and summary to be overwritten by GitHub Actions (they are required in this call)
     // We'll also store the total in an annotation to future-proof
-    yield octokit.checks.update({
+    await octokit.checks.update({
         owner,
         repo,
         check_run_id: checkRun.id,
@@ -705,7 +696,7 @@ const setCheckRunOutput = (text) => __awaiter(void 0, void 0, void 0, function* 
             ],
         },
     });
-});
+};
 exports.setCheckRunOutput = setCheckRunOutput;
 
 
@@ -12471,15 +12462,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -12528,7 +12510,7 @@ const indent = (text) => {
     str = str.replace(/\r\n/gim, '\n').replace(/\n/gim, '\n  ');
     return str;
 };
-const waitForExit = (child, timeout) => __awaiter(void 0, void 0, void 0, function* () {
+const waitForExit = async (child, timeout) => {
     // eslint-disable-next-line no-undef
     return new Promise((resolve, reject) => {
         let timedOut = false;
@@ -12555,8 +12537,8 @@ const waitForExit = (child, timeout) => __awaiter(void 0, void 0, void 0, functi
             reject(error);
         });
     });
-});
-const runSetup = (test, cwd, timeout) => __awaiter(void 0, void 0, void 0, function* () {
+};
+const runSetup = async (test, cwd, timeout) => {
     if (!test.setup || test.setup === '') {
         return;
     }
@@ -12578,9 +12560,9 @@ const runSetup = (test, cwd, timeout) => __awaiter(void 0, void 0, void 0, funct
     setup.stderr.on('data', chunk => {
         process.stderr.write(indent(chunk));
     });
-    yield waitForExit(setup, timeout);
-});
-const runCommand = (test, cwd, timeout) => __awaiter(void 0, void 0, void 0, function* () {
+    await waitForExit(setup, timeout);
+};
+const runCommand = async (test, cwd, timeout) => {
     const child = (0, child_process_1.spawn)(test.run, {
         cwd,
         shell: true,
@@ -12604,7 +12586,7 @@ const runCommand = (test, cwd, timeout) => __awaiter(void 0, void 0, void 0, fun
         child.stdin.write(test.input);
         child.stdin.end();
     }
-    yield waitForExit(child, timeout);
+    await waitForExit(child, timeout);
     // Eventually work off the the test type
     if ((!test.output || test.output == '') && (!test.input || test.input == '')) {
         return;
@@ -12630,19 +12612,19 @@ const runCommand = (test, cwd, timeout) => __awaiter(void 0, void 0, void 0, fun
             }
             break;
     }
-});
-const run = (test, cwd) => __awaiter(void 0, void 0, void 0, function* () {
+};
+const run = async (test, cwd) => {
     // Timeouts are in minutes, but need to be in ms
     let timeout = (test.timeout || 1) * 60 * 1000 || 30000;
     const start = process.hrtime();
-    yield runSetup(test, cwd, timeout);
+    await runSetup(test, cwd, timeout);
     const elapsed = process.hrtime(start);
     // Subtract the elapsed seconds (0) and nanoseconds (1) to find the remaining timeout
     timeout -= Math.floor(elapsed[0] * 1000 + elapsed[1] / 1000000);
-    yield runCommand(test, cwd, timeout);
-});
+    await runCommand(test, cwd, timeout);
+};
 exports.run = run;
-const runAll = (tests, cwd) => __awaiter(void 0, void 0, void 0, function* () {
+const runAll = async (tests, cwd) => {
     let points = 0;
     let availablePoints = 0;
     let hasPoints = false;
@@ -12662,7 +12644,7 @@ const runAll = (tests, cwd) => __awaiter(void 0, void 0, void 0, function* () {
             }
             log(color.cyan(`📝 ${test.name}`));
             log('');
-            yield (0, exports.run)(test, cwd);
+            await (0, exports.run)(test, cwd);
             log('');
             log(color.green(`✅ completed - ${test.name}`));
             log(``);
@@ -12707,9 +12689,9 @@ const runAll = (tests, cwd) => __awaiter(void 0, void 0, void 0, function* () {
         const text = `Points ${points}/${availablePoints}`;
         log(color.bold.bgCyan.black(text));
         core.setOutput('Points', `${points}/${availablePoints}`);
-        yield (0, output_1.setCheckRunOutput)(text);
+        await (0, output_1.setCheckRunOutput)(text);
     }
-});
+};
 exports.runAll = runAll;
 
 
@@ -27030,15 +27012,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -27047,7 +27020,7 @@ const core = __importStar(__webpack_require__(470));
 const fs_1 = __importDefault(__webpack_require__(747));
 const path_1 = __importDefault(__webpack_require__(622));
 const runner_1 = __webpack_require__(835);
-const run = () => __awaiter(void 0, void 0, void 0, function* () {
+const run = async () => {
     try {
         const cwd = process.env['GITHUB_WORKSPACE'];
         if (!cwd) {
@@ -27055,7 +27028,7 @@ const run = () => __awaiter(void 0, void 0, void 0, function* () {
         }
         const data = fs_1.default.readFileSync(path_1.default.resolve(cwd, '.github/classroom/autograding.json'));
         const json = JSON.parse(data.toString());
-        yield (0, runner_1.runAll)(json.tests, cwd);
+        await (0, runner_1.runAll)(json.tests, cwd);
     }
     catch (error) {
         // If there is any error we'll fail the action with the error message
@@ -27067,7 +27040,7 @@ const run = () => __awaiter(void 0, void 0, void 0, function* () {
         }
         core.setFailed(`Autograding failure: ${error}`);
     }
-});
+};
 // Don't auto-execute in the test environment
 if (process.env['NODE_ENV'] !== 'test') {
     run();
