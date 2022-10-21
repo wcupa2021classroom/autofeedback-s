@@ -12,6 +12,6 @@
     "removeComments": false,
     "preserveConstEnums": true
   },
-  "include": ["**/*.ts", "jest.config.js"],
+  "include": ["**/*.ts"],
   "exclude": ["node_modules"]
 }

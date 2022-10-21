@@ -2648,7 +2648,7 @@ conversions["RegExp"] = function (V, opts) {
 /***/ 158:
 /***/ (function() {
 
-eval("require")("ansi-styles");
+eval("require")("#ansi-styles");
 
 
 /***/ }),
