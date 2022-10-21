@@ -24,4 +24,7 @@ module.exports = {
     '^.+\\.ts$': 'ts-jest',
   },
   verbose: true,
+  moduleNameMapper: {
+    "#(.*)": "<rootDir>/node_modules/$1"
+  },
 }
