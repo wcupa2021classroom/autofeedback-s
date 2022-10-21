@@ -4,9 +4,9 @@ import {v4 as uuidv4} from 'uuid'
 import * as core from '@actions/core'
 import {setCheckRunOutput} from './output'
 import * as os from 'os'
-import {Chalk} from 'chalk'
+import chalk from 'chalk'
 
-const color = new Chalk({level: 1})
+const color = new chalk.Instance({level: 1})
 
 export type TestComparison = 'exact' | 'included' | 'regex'
 
@@ -37,8 +37,8 @@ export class TestTimeoutError extends TestError {
 }
 
 export class TestOutputError extends TestError {
-  expected: string;
-  actual: string;
+  expected: string
+  actual: string
 
   constructor(message: string, expected: string, actual: string) {
     super(`${message}\nExpected:\n${expected}\nActual:\n${actual}`)
