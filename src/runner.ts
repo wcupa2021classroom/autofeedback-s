@@ -200,6 +200,8 @@ export const run = async (test: Test, cwd: string): Promise<void> => {
 export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => {
   let points = 0
   let availablePoints = 0
+  let passed = 0
+  let numtests = 0
   let hasPoints = false
 
   // https://help.github.com/en/actions/reference/development-tools-for-github-actions#stop-and-start-log-commands-stop-commands
@@ -211,6 +213,7 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
   let failed = false
 
   for (const test of tests) {
+    numtests += 1
     try {
       if (test.points) {
         hasPoints = true
@@ -227,6 +230,7 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
       if (test.points) {
         points += test.points
       }
+      passed += 1
     } catch (error) {
       log('')
       log(color.red(`❌ failed - ${test.name}`))
@@ -247,9 +251,16 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
 
   if (failed) {
     // We need a good failure experience
+    log('')
+    log(color.red('At least one test failed'))
+    log('')
+    log('Please, look at the output and make sure it makes sense to you.')
+    log(' If it does, then check the requirements to see what formatting may need to change.')
   } else {
     log('')
     log(color.green('All tests passed'))
+    log('')
+    log('Please, still look at the output and make sure it looks right to you.')
     log('')
     log('✨🌟💖💎🦄💎💖🌟✨🌟💖💎🦄💎💖🌟✨')
     log('')
@@ -268,4 +279,11 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
     core.setOutput('Points', `${points}/${availablePoints}`)
     await setCheckRunOutput(text)
   }
+
+  // set the number of tests that passed
+  const text = `Tests Passed: ${passed}/${numtests}`
+  log(color.bold.bgCyan.black(text))
+  core.setOutput('Tests Passed:', `${passed}/${numtests}`)
+  
+  
 }
