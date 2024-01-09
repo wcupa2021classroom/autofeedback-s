@@ -1,5 +1,5 @@
 # WCU-CS-CooperLab/autofeedback-s
-![CI Build](https://github.com/stevenbitner/autograding/actions/workflows/ci.yml/badge.svg)
+![CI Build](https://github.com/WCU-CS-CooperLab/autofeedback-s/actions/workflows/ci.yml/badge.svg)
 
 - This repo is forked from https://github.com/stevenbitner/autograding.
 - Initially changes were to deal with staying updated.
