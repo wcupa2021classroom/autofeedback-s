@@ -13807,6 +13807,12 @@ const runAll = async (tests, cwd) => {
         log(`💪💪💪 You earned ${extraCreditPoints} extra credit points`);
         log('');
     }
+    const text = `Tests Passed: ${passed}/${numtests}
+  Passing tests: ${passing}
+  Failing tests: ${failing}`;
+    //log(color.bold.bgCyan.black(text))
+    log(color.bold.bgCyan.black(text));
+    await (0, output_1.setCheckRunOutput)(text, "Summary");
     // Set the number of points
     if (hasPoints) {
         const text = `Points ${points}/${availablePoints}`;
@@ -13824,12 +13830,6 @@ const runAll = async (tests, cwd) => {
         core.setOutput('Points', `${passed}/${numtests}`);
         await (0, output_1.setCheckRunOutput)(text, "complete");
     }
-    const text = `Tests Passed: ${passed}/${numtests}
-  Passing tests: ${passing}
-  Failing tests: ${failing}`;
-    //log(color.bold.bgCyan.black(text))
-    log(color.bold.bgCyan.black(text));
-    await (0, output_1.setCheckRunOutput)(text, "Summary");
 };
 exports.runAll = runAll;
 
