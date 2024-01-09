@@ -41,7 +41,7 @@ export class TestOutputError extends TestError {
   actual: string
 
   constructor(message: string, expected: string, actual: string) {
-    super(`${message}\nExpected:\n${expected}\nActual:\n${actual}`)
+    super(`${message}%0AExpected:<br/>${expected}%0AActual:%0A${actual}`)
     this.expected = expected
     this.actual = actual
 
@@ -281,9 +281,9 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
   }
 
   // set the number of tests that passed
-  const text = `Tests Passed: ${passed}/${numtests}`
-  log(color.bold.bgCyan.black(text))
-  core.notice(`Tests Passed: ${passed}/${numtests}`)
+  const text = `Tests Passed: ${passed}/${numtests} <br/> Next Line.`
+  //log(color.bold.bgCyan.black(text))
+  core.notice(text)
   
   
 }

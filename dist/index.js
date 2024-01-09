@@ -13579,7 +13579,7 @@ class TestTimeoutError extends TestError {
 exports.TestTimeoutError = TestTimeoutError;
 class TestOutputError extends TestError {
     constructor(message, expected, actual) {
-        super(`${message}\nExpected:\n${expected}\nActual:\n${actual}`);
+        super(`${message}%0AExpected:<br/>${expected}%0AActual:%0A${actual}`);
         this.expected = expected;
         this.actual = actual;
         Error.captureStackTrace(this, TestOutputError);
@@ -13791,9 +13791,9 @@ const runAll = async (tests, cwd) => {
         await (0, output_1.setCheckRunOutput)(text);
     }
     // set the number of tests that passed
-    const text = `Tests Passed: ${passed}/${numtests}`;
-    log(color.bold.bgCyan.black(text));
-    core.notice(`Tests Passed: ${passed}/${numtests}`);
+    const text = `Tests Passed: ${passed}/${numtests} <br/> Next Line.`;
+    //log(color.bold.bgCyan.black(text))
+    core.notice(text);
 };
 exports.runAll = runAll;
 
