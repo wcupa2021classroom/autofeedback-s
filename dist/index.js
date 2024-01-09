@@ -13698,6 +13698,10 @@ const runCommand = async (test, cwd, timeout) => {
         const linesExpected = expected.split(/\r?\n/);
         const minLines = Math.min(linesActual.length, linesExpected.length);
         const result = [];
+        result.push('');
+        result.push('Full program output:');
+        result.push(actual);
+        result.push('');
         result.push(``);
         result.push(`Num lines expected ` + linesExpected.length);
         result.push(`  Num lines actual ` + linesActual.length);
