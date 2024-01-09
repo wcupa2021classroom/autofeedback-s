@@ -2,7 +2,8 @@
 ![CI Build](https://github.com/stevenbitner/autograding/actions/workflows/ci.yml/badge.svg)
 
 - This repo is forked from https://github.com/stevenbitner/autograding.
-- The source repository has not been updated in a while, so I'm hoping to fix a few issues in this repo.
+- Initially changes were to deal with staying updated.
+- Now, a couple of new features exist.
 
 ## Basic Usage
 The autograder is a GitHub Action that must be triggered as part of a CI workflow.
