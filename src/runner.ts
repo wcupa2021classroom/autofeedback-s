@@ -41,7 +41,11 @@ export class TestOutputError extends TestError {
   actual: string
 
   constructor(message: string, expected: string, actual: string) {
-    super(`${message}\nExpected:\n${expected}\nActual:\n${actual}`)
+    super(`${message}
+    Expected:
+${expected}
+    Actual:
+${actual}`)
     this.expected = expected
     this.actual = actual
 
@@ -125,7 +129,15 @@ const runSetup = async (test: Test, cwd: string, timeout: number): Promise<void>
   await waitForExit(setup, timeout)
 }
 
-const runCommand = async (test: Test, cwd: string, timeout: number): Promise<void> => {
+// function throwError(header:string,exp:string,act:string) {
+//   return new Promise((resolve) => {
+//       core.error(`${header}\nExpected:\n${exp}\nActual:\n${act}`)
+//       resolve("test")
+//   });
+  
+// }
+
+const runCommand = async (test: Test, cwd: string, timeout: number) => {
   const child = spawn(test.run, {
     cwd,
     shell: true,
@@ -168,25 +180,40 @@ const runCommand = async (test: Test, cwd: string, timeout: number): Promise<voi
   switch (test.comparison) {
     case 'exact':
       if (actual != expected) {
+        //core.group(`Error: ${test.name}`, async() => {
+
         throw new TestOutputError(`The output for test ${test.name} did not match`, expected, actual)
+      
+      
+        //core.endGroup()
       }
       break
     case 'regex':
       // Note: do not use expected here
       if (!actual.match(new RegExp(test.output || ''))) {
+        //core.startGroup(`Error: ${test.name}`)
         throw new TestOutputError(`The output for test ${test.name} did not match`, test.output || '', actual)
+       
+        
+        //core.endGroup()
       }
       break
     default:
       // The default comparison mode is 'included'
       if (!actual.includes(expected)) {
-        throw new TestOutputError(`The output for test ${test.name} did not match`, expected, actual)
+        //core.group(`Error: ${test.name}`, async() => { 
+          throw new TestOutputError(`The output for test ${test.name} did not match`, expected, actual)
+        
+        
+        
+        //core.endGroup()
       }
       break
   }
+  return output
 }
 
-export const run = async (test: Test, cwd: string): Promise<void> => {
+export const run = async (test: Test, cwd: string) => {
   // Timeouts are in minutes, but need to be in ms
   let timeout = (test.timeout || 1) * 60 * 1000 || 30000
   const start = process.hrtime()
@@ -194,23 +221,31 @@ export const run = async (test: Test, cwd: string): Promise<void> => {
   const elapsed = process.hrtime(start)
   // Subtract the elapsed seconds (0) and nanoseconds (1) to find the remaining timeout
   timeout -= Math.floor(elapsed[0] * 1000 + elapsed[1] / 1000000)
-  await runCommand(test, cwd, timeout)
+  const result = await runCommand(test, cwd, timeout)
+  return result
 }
 
 export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => {
   let points = 0
   let availablePoints = 0
+  let passed = 0
+  let numtests = 0
   let hasPoints = false
 
-  // https://help.github.com/en/actions/reference/development-tools-for-github-actions#stop-and-start-log-commands-stop-commands
-  const token = uuidv4()
-  log('')
-  log(`::stop-commands::${token}`)
-  log('')
-
+  
   let failed = false
+  const passing = []
+  const failing = []
 
   for (const test of tests) {
+    numtests += 1
+    log('')
+    // https://help.github.com/en/actions/reference/development-tools-for-github-actions#stop-and-start-log-commands-stop-commands
+    const token = uuidv4()
+    log('')
+    log(`::stop-commands::${token}`)
+    log('')
+
     try {
       if (test.points) {
         hasPoints = true
@@ -219,20 +254,37 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
         }
       }
       log(color.cyan(`📝 ${test.name}`))
+ 
+      const result = await run(test, cwd)
+      // Restart command processing
       log('')
-      await run(test, cwd)
+      log(`::${token}::`)
+
       log('')
       log(color.green(`✅ completed - ${test.name}`))
       log(``)
+      core.summary.addRaw(`#### passed ${test.name}`,true)
+      core.summary.addCodeBlock(result || "no output")
+          
       if (test.points) {
         points += test.points
       }
+      passing.push(test.name)
+      passed += 1
     } catch (error) {
       log('')
+      // Restart command processing
+      log('')
+      log(`::${token}::`)
+
+      failing.push(test.name)
       log(color.red(`❌ failed - ${test.name}`))
       if (!test.extra) {
         failed = true
         if(error instanceof Error) {
+          core.summary.addRaw(`#### failed ${test.name}`,true)
+          core.summary.addCodeBlock(error.message)
+          //core.summary.write()
             core.setFailed(error.message)
         } else {
             core.setFailed("Unknown exception")
@@ -241,15 +293,21 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
     }
   }
 
-  // Restart command processing
-  log('')
-  log(`::${token}::`)
-
+  
   if (failed) {
     // We need a good failure experience
+    log('')
+    log(color.red('At least one test failed'))
+    log('')
+    log('Please, look at the output and make sure it makes sense to you.')
+    log(' If it does, then check the requirements to see what formatting may need to change.')
+    log('')
+    
   } else {
     log('')
     log(color.green('All tests passed'))
+    log('')
+    log('Please, still look at the output and make sure it looks right to you.')
     log('')
     log('✨🌟💖💎🦄💎💖🌟✨🌟💖💎🦄💎💖🌟✨')
     log('')
@@ -261,11 +319,40 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
     log('')
   }
 
+  const text = `Tests Passed: ${passed}/${numtests}  
+  Passing tests: ${passing}  
+  Failing tests: ${failing}  `
+  core.summary.addRaw("## Test Summary",true)
+  core.summary.addRaw(text,true)
+  core.summary.write()
+    //log(color.bold.bgCyan.black(text))
+    log(color.bold.bgCyan.black(text))
+    log("")
+    log("")
+    
+    await setCheckRunOutput(text,"Summary")
+  
+
   // Set the number of points
   if (hasPoints) {
     const text = `Points ${points}/${availablePoints}`
     log(color.bold.bgCyan.black(text))
     core.setOutput('Points', `${points}/${availablePoints}`)
-    await setCheckRunOutput(text)
+     await setCheckRunOutput(text,"complete")
+  } else {
+
+  // set the number of tests that passed
+     const text = `Points ${passed}/${numtests}`
+//Passing tests: ${passing}
+//Failing tests: ${failing}`
+  //log(color.bold.bgCyan.black(text))
+  //log(color.bold.bgCyan.black(text))
+  core.setOutput('Points', `${passed}/${numtests}`)
+  await setCheckRunOutput(text,"complete")
   }
+
+  
+  
+  
+  
 }
