@@ -1,6 +1,6 @@
 import {spawn, ChildProcess} from 'child_process'
 import kill from 'tree-kill'
-import {v4 as uuidv4} from 'uuid'
+//import {v4 as uuidv4} from 'uuid'
 import * as core from '@actions/core'
 import {setCheckRunOutput} from './output'
 import * as os from 'os'
@@ -231,9 +231,9 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
   let hasPoints = false
 
   // https://help.github.com/en/actions/reference/development-tools-for-github-actions#stop-and-start-log-commands-stop-commands
-  const token = uuidv4()
+  //const token = uuidv4()
   log('')
-  log(`::stop-commands::${token}`)
+  //log(`::stop-commands::${token}`)
   log('')
 
   let failed = false
@@ -273,7 +273,7 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
 
   // Restart command processing
   log('')
-  log(`::${token}::`)
+  //log(`::${token}::`)
 
   if (failed) {
     // We need a good failure experience
