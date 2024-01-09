@@ -13860,7 +13860,7 @@ const runAll = async (tests, cwd) => {
                     core.summary.addCodeBlock(error.message);
                     const errors = [];
                     errors.push(error.message);
-                    if (error.message.indexOf("regex") != -1) {
+                    if (error.message.indexOf('regex') != -1) {
                         core.summary.addRaw('', true);
                         core.summary.addRaw('**Note:** [debuggex](https://www.debuggex.com) will take the *expected* text in the first box and the *actual* text in the second box and show you a *red line* for where the test fails.', true);
                         core.summary.addRaw('', true);
