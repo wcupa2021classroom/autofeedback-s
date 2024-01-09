@@ -317,11 +317,11 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
   core.summary.write()
   //log(color.bold.bgCyan.black(text))
   log(color.bold.bgCyan.black(text))
-  log("")
-  log("")
-    
+  log('')
+  log('')
+
   await setCheckRunOutput(text, 'Summary')
-  
+
   // Set the number of points
   if (hasPoints) {
     const text = `Points ${points}/${availablePoints}`

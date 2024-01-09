@@ -19,7 +19,7 @@ const run = async (): Promise<void> => {
     if (error instanceof Error) {
       console.error(error.message)
     } else {
-      console.error("Unknown exception")
+      console.error('Unknown exception')
     }
     core.setFailed(`Autograding failure: ${error}`)
   }
