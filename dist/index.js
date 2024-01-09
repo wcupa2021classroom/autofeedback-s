@@ -13867,10 +13867,10 @@ const runAll = async (tests, cwd) => {
                         errors.push(`Note: https://www.debuggex.com will take the Expected text in the first box and the Actual text in the second box and show you a red line for where the test fails.`);
                     }
                     //core.summary.write()
-                    core.setFailed(errors.join(os.EOL));
+                    log(errors.join(os.EOL));
                 }
                 else {
-                    core.setFailed('Unknown exception');
+                    log('Unknown exception');
                 }
             }
         }

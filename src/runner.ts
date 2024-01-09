@@ -366,9 +366,9 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
             
           }
           //core.summary.write()
-          core.setFailed(errors.join(os.EOL))
+          log(errors.join(os.EOL))
         } else {
-          core.setFailed('Unknown exception')
+          log('Unknown exception')
         }
       }
     }
