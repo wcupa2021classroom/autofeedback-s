@@ -284,7 +284,7 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
         if(error instanceof Error) {
           core.summary.addRaw(`#### failed ${test.name}`,true)
           core.summary.addCodeBlock(error.message)
-          core.summary.write()
+          //core.summary.write()
             core.setFailed(error.message)
         } else {
             core.setFailed("Unknown exception")
