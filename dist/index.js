@@ -13583,7 +13583,9 @@ class TestOutputError extends TestError {
     Expected:
 ${expected}
     Actual:
-${actual}`);
+${actual}
+
+**Note: [debuggex](https://www.debuggex.com) will take the expected text in the first box and the actual text in the second box and show you a red line for where the test fails.`);
         this.expected = expected;
         this.actual = actual;
         Error.captureStackTrace(this, TestOutputError);
@@ -13691,11 +13693,80 @@ const runCommand = async (test, cwd, timeout) => {
     }
     const expected = normalizeLineEndings(test.output || '');
     const actual = normalizeLineEndings(output);
+    const diffMessage = (actual, expected) => {
+        const linesActual = actual.split(/\r?\n/);
+        const linesExpected = expected.split(/\r?\n/);
+        const minLines = Math.min(linesActual.length, linesExpected.length);
+        const result = [];
+        result.push(``);
+        result.push(`Num lines expected ` + linesExpected.length);
+        result.push(`  Num lines actual ` + linesActual.length);
+        let cActual = ``;
+        let cExpected = ``;
+        let expectedLine = ``;
+        let actualLine = ``;
+        result.push(``);
+        // Look at each line
+        let i;
+        for (i = 0; i < minLines; i++) {
+            expectedLine = linesExpected[i];
+            actualLine = linesActual[i];
+            if (actualLine == expectedLine) {
+                result.push(color.green(`Line ` + i + `\tExpected: "` + expectedLine + `\\n"`));
+                result.push(color.green(`Line ` + i + `\t  Actual: "` + actualLine + `\\n"`));
+            }
+            else {
+                result.push(color.red(`------- Mismatch on line ` + i));
+                const diff = [...expectedLine];
+                for (let j = 0; j < expectedLine.length; j++) {
+                    if (actualLine[j] != expectedLine[j]) {
+                        cActual = actualLine[j];
+                        cExpected = expectedLine[j];
+                        diff[j] = `^`;
+                    }
+                    else {
+                        diff[j] = `_`;
+                    }
+                }
+                const diffLine = diff.join('');
+                result.push(``);
+                result.push(color.red(`EXPECTED: "` + expectedLine + `"`));
+                result.push(color.red(`  ACTUAL: "` + actualLine + `"`));
+                result.push(color.red(`           ` + diffLine));
+                result.push(``);
+                if (expectedLine.length >= actualLine.length) {
+                    result.push(color.red(`Character '` + cActual + `' does not match expected character '` + cExpected + `'`));
+                    result.push(``);
+                }
+                result.push(color.red(`Note: If both lines look the same, then it could be the an`));
+                result.push(color.red(`invisible whitespace such as a tab or newline. Highlighting`));
+                result.push(color.red(`and/or copying each line could help you figure out if there`));
+                result.push(color.red(`are hidden whitespace characters.`));
+                return result.join(os.EOL);
+            }
+        }
+        if (linesActual.length < linesExpected.length) {
+            result.push(``);
+            result.push(color.red(`Your program is missing output.`));
+            result.push(``);
+            result.push(color.red(`Missing output: "` + linesExpected[i] + `"`));
+        }
+        else if (linesActual.length > linesExpected.length) {
+            result.push(``);
+            result.push(color.red(`Extra output found in your program output.`));
+            result.push(``);
+            result.push(color.red(`Extra output: "` + linesActual[i] + `"`));
+        }
+        return result.join(os.EOL);
+    };
     switch (test.comparison) {
         case 'exact':
             if (actual != expected) {
                 //core.group(`Error: ${test.name}`, async() => {
-                throw new TestOutputError(`The output for test ${test.name} did not match`, expected, actual);
+                const result = diffMessage(actual, expected);
+                throw new TestError(`The output for test ${test.name} does not match:
+${result}`);
+                //throw new TestOutputError(`The output for test ${test.name} did not match`, expected, actual)
                 //core.endGroup()
             }
             break;
@@ -13710,8 +13781,11 @@ const runCommand = async (test, cwd, timeout) => {
         default:
             // The default comparison mode is 'included'
             if (!actual.includes(expected)) {
-                //core.group(`Error: ${test.name}`, async() => { 
-                throw new TestOutputError(`The output for test ${test.name} did not match`, expected, actual);
+                //core.group(`Error: ${test.name}`, async() => {
+                const result = diffMessage(actual, expected);
+                throw new TestError(`The output for test ${test.name} did not match:
+${result}`);
+                //throw new TestOutputError(`The output for test ${test.name} did not match`, expected, actual)
                 //core.endGroup()
             }
             break;
@@ -13763,7 +13837,7 @@ const runAll = async (tests, cwd) => {
             log(color.green(`✅ completed - ${test.name}`));
             log(``);
             core.summary.addRaw(`#### passed ${test.name}`, true);
-            core.summary.addCodeBlock(result || "no output");
+            core.summary.addCodeBlock(result || 'no output');
             if (test.points) {
                 points += test.points;
             }
@@ -13786,7 +13860,7 @@ const runAll = async (tests, cwd) => {
                     core.setFailed(error.message);
                 }
                 else {
-                    core.setFailed("Unknown exception");
+                    core.setFailed('Unknown exception');
                 }
             }
         }
@@ -13817,20 +13891,20 @@ const runAll = async (tests, cwd) => {
     const text = `Tests Passed: ${passed}/${numtests}  
   Passing tests: ${passing}  
   Failing tests: ${failing}  `;
-    core.summary.addRaw("## Test Summary", true);
+    core.summary.addRaw('## Test Summary', true);
     core.summary.addRaw(text, true);
     core.summary.write();
     //log(color.bold.bgCyan.black(text))
     log(color.bold.bgCyan.black(text));
-    log("");
-    log("");
-    await (0, output_1.setCheckRunOutput)(text, "Summary");
+    log('');
+    log('');
+    await (0, output_1.setCheckRunOutput)(text, 'Summary');
     // Set the number of points
     if (hasPoints) {
         const text = `Points ${points}/${availablePoints}`;
         log(color.bold.bgCyan.black(text));
         core.setOutput('Points', `${points}/${availablePoints}`);
-        await (0, output_1.setCheckRunOutput)(text, "complete");
+        await (0, output_1.setCheckRunOutput)(text, 'complete');
     }
     else {
         // set the number of tests that passed
@@ -13840,7 +13914,7 @@ const runAll = async (tests, cwd) => {
         //log(color.bold.bgCyan.black(text))
         //log(color.bold.bgCyan.black(text))
         core.setOutput('Points', `${passed}/${numtests}`);
-        await (0, output_1.setCheckRunOutput)(text, "complete");
+        await (0, output_1.setCheckRunOutput)(text, 'complete');
     }
 };
 exports.runAll = runAll;
@@ -28431,7 +28505,7 @@ const run = async () => {
             console.error(error.message);
         }
         else {
-            console.error("Unknown exception");
+            console.error('Unknown exception');
         }
         core.setFailed(`Autograding failure: ${error}`);
     }
