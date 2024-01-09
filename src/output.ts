@@ -1,7 +1,7 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 
-export const setCheckRunOutput = async (text: string): Promise<void> => {
+export const setCheckRunOutput = async (text: string,suffix: string): Promise<void> => {
   // If we have nothing to output, then bail
   if (text === '') return
 
@@ -65,7 +65,7 @@ export const setCheckRunOutput = async (text: string): Promise<void> => {
           end_line: 1,
           annotation_level: 'notice',
           message: text,
-          title: 'Autograding complete',
+          title: `Autograding ${suffix}`,
         },
       ],
     },

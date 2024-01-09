@@ -731,7 +731,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.setCheckRunOutput = void 0;
 const core = __importStar(__webpack_require__(470));
 const github = __importStar(__webpack_require__(469));
-const setCheckRunOutput = async (text) => {
+const setCheckRunOutput = async (text, suffix) => {
     // If we have nothing to output, then bail
     if (text === '')
         return;
@@ -795,7 +795,7 @@ const setCheckRunOutput = async (text) => {
                     end_line: 1,
                     annotation_level: 'notice',
                     message: text,
-                    title: 'Autograding complete',
+                    title: `Autograding ${suffix}`,
                 },
             ],
         },
@@ -13812,18 +13812,24 @@ const runAll = async (tests, cwd) => {
         const text = `Points ${points}/${availablePoints}`;
         log(color.bold.bgCyan.black(text));
         core.setOutput('Points', `${points}/${availablePoints}`);
-        await (0, output_1.setCheckRunOutput)(text);
+        await (0, output_1.setCheckRunOutput)(text, "complete");
     }
     else {
         // set the number of tests that passed
-        const text = `Test Points ${passed}/${numtests}`;
+        const text = `Points ${passed}/${numtests}`;
         //Passing tests: ${passing}
         //Failing tests: ${failing}`
         //log(color.bold.bgCyan.black(text))
         log(color.bold.bgCyan.black(text));
         core.setOutput('Points', `${passed}/${numtests}`);
-        await (0, output_1.setCheckRunOutput)(text);
+        await (0, output_1.setCheckRunOutput)(text, "complete");
     }
+    const text = `Tests Passed: ${passed}/${numtests}
+  Passing tests: ${passing}
+  Failing tests: ${failing}`;
+    //log(color.bold.bgCyan.black(text))
+    log(color.bold.bgCyan.black(text));
+    await (0, output_1.setCheckRunOutput)(text, "Summary");
 };
 exports.runAll = runAll;
 

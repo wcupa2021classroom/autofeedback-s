@@ -316,18 +316,27 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
     const text = `Points ${points}/${availablePoints}`
     log(color.bold.bgCyan.black(text))
     core.setOutput('Points', `${points}/${availablePoints}`)
-     await setCheckRunOutput(text)
+     await setCheckRunOutput(text,"complete")
   } else {
 
   // set the number of tests that passed
-     const text = `Test Points ${passed}/${numtests}`
+     const text = `Points ${passed}/${numtests}`
 //Passing tests: ${passing}
 //Failing tests: ${failing}`
   //log(color.bold.bgCyan.black(text))
   log(color.bold.bgCyan.black(text))
   core.setOutput('Points', `${passed}/${numtests}`)
-  await setCheckRunOutput(text)
+  await setCheckRunOutput(text,"complete")
   }
+
+  const text = `Tests Passed: ${passed}/${numtests}
+  Passing tests: ${passing}
+  Failing tests: ${failing}`
+    //log(color.bold.bgCyan.black(text))
+    log(color.bold.bgCyan.black(text))
+    
+    await setCheckRunOutput(text,"Summary")
+  
   
   
   
