@@ -171,6 +171,7 @@ const runCommand = async (test: Test, cwd: string, timeout: number): Promise<voi
         core.group(`Error: ${test.name}`, async() => {
 
         throw new TestOutputError(`The output for test ${test.name} did not match`, expected, actual)})
+        core.endGroup()
       }
       break
     case 'regex':
@@ -178,6 +179,7 @@ const runCommand = async (test: Test, cwd: string, timeout: number): Promise<voi
       if (!actual.match(new RegExp(test.output || ''))) {
         core.group(`Error: ${test.name}`, async() => { 
           throw new TestOutputError(`The output for test ${test.name} did not match`, test.output || '', actual)})
+        core.endGroup()
       }
       break
     default:
@@ -185,6 +187,7 @@ const runCommand = async (test: Test, cwd: string, timeout: number): Promise<voi
       if (!actual.includes(expected)) {
         core.group(`Error: ${test.name}`, async() => { 
           throw new TestOutputError(`The output for test ${test.name} did not match`, expected, actual)})
+        core.endGroup()
       }
       break
   }

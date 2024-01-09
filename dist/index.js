@@ -13687,6 +13687,7 @@ const runCommand = async (test, cwd, timeout) => {
                 core.group(`Error: ${test.name}`, async () => {
                     throw new TestOutputError(`The output for test ${test.name} did not match`, expected, actual);
                 });
+                core.endGroup();
             }
             break;
         case 'regex':
@@ -13695,6 +13696,7 @@ const runCommand = async (test, cwd, timeout) => {
                 core.group(`Error: ${test.name}`, async () => {
                     throw new TestOutputError(`The output for test ${test.name} did not match`, test.output || '', actual);
                 });
+                core.endGroup();
             }
             break;
         default:
@@ -13703,6 +13705,7 @@ const runCommand = async (test, cwd, timeout) => {
                 core.group(`Error: ${test.name}`, async () => {
                     throw new TestOutputError(`The output for test ${test.name} did not match`, expected, actual);
                 });
+                core.endGroup();
             }
             break;
     }
