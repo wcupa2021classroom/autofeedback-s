@@ -168,19 +168,23 @@ const runCommand = async (test: Test, cwd: string, timeout: number): Promise<voi
   switch (test.comparison) {
     case 'exact':
       if (actual != expected) {
-        throw new TestOutputError(`The output for test ${test.name} did not match`, expected, actual)
+        core.group(`Error: ${test.name}`, async() => {
+
+        throw new TestOutputError(`The output for test ${test.name} did not match`, expected, actual)})
       }
       break
     case 'regex':
       // Note: do not use expected here
       if (!actual.match(new RegExp(test.output || ''))) {
-        throw new TestOutputError(`The output for test ${test.name} did not match`, test.output || '', actual)
+        core.group(`Error: ${test.name}`, async() => { 
+          throw new TestOutputError(`The output for test ${test.name} did not match`, test.output || '', actual)})
       }
       break
     default:
       // The default comparison mode is 'included'
       if (!actual.includes(expected)) {
-        throw new TestOutputError(`The output for test ${test.name} did not match`, expected, actual)
+        core.group(`Error: ${test.name}`, async() => { 
+          throw new TestOutputError(`The output for test ${test.name} did not match`, expected, actual)})
       }
       break
   }
