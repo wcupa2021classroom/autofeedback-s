@@ -1,8 +1,8 @@
-# stevenbitner/autograding
+# WCU-CS-CooperLab/autofeedback-s
 ![CI Build](https://github.com/stevenbitner/autograding/actions/workflows/ci.yml/badge.svg)
 
-- This repo is forked from https://github.com/education/autograding/.
-- The source repository has not been updated in a long time, so I'm hoping to fix a few issues in this repo.
+- This repo is forked from https://github.com/stevenbitner/autograding.
+- The source repository has not been updated in a while, so I'm hoping to fix a few issues in this repo.
 
 ## Basic Usage
 The autograder is a GitHub Action that must be triggered as part of a CI workflow.
@@ -11,7 +11,7 @@ An example [.github](resources/.github) directory is included in the [resources]
 
 ### Either/or
 If you set up tests in [GithHub Classroom](https://classroom.github.com) when creating the assignment, it will overwrite the configuration files described below.
-As such, if you are going through any part of the process from this action repository, **don not** add tests in the web interface when creating the assignment.
+As such, if you are going through any part of the process from this action repository, **do not** add tests in the web interface when creating the assignment.
 
 ### TLDR
 - Copy the .github directory (contained in [resources](resources)) to the top level of the repository to be graded.
@@ -34,8 +34,8 @@ As such, if you are going through any part of the process from this action repos
 	- timeout: Sets a timeout on how long the program can run and still be considered a "passing" test. Time is in minutes.
 		- ***Note:*** the `timeout` attribute of the test will not halt execution. Prefixing `run` commands with `timeout XX` will halt execution after XX seconds.
 		- Failing to include the Linux `timeout` command in your `run` attribute may result in infinite loops or other code issues consuming a large portion of GitHub Actions minutes for your organization.
-	- points: This is the integer number of points that the test is worth. It is all or nothing, no partial points are possible within a given test. If partial credit is needed, you must split up the test.
-	- extra: This attribute should be present (and set to `true`) only if the test is considered extra credit and should not count toward the total points possible.
+	- points: This is the integer number of points that the test is worth. It is all or nothing, no partial points are possible within a given test. If partial credit is needed, you must split up the test. (if points is not included on any tests, then the number of tests passed will be used as points.
+	- extra: This attribute should be present (and set to `true`) only if the test is considered extra credit and should not count toward the total points possible. This can also be used to assign partial credit for a particular part.
 - The output from the test suite that would be run by [resources/.github](resources/.github) will look like this:\
 ![Output screenshot from test runner](resources/runner-output.png)
 
@@ -48,6 +48,9 @@ Changes to that file may break this setup.
 ```md
 [![Points badge](../../blob/badges/.github/badges/points.svg)](../../actions)
 ```
+
+#### Test Results in Autograder Summary
+The results from testing are shown in the summary as long as the test compiles. If it doesn't compile, then you'll still need to look at the workflow logs.
 
 #### Running locally with Docker
 - Get the Docker image here https://hub.docker.com/repository/docker/sbitner/github-action-runner. 
