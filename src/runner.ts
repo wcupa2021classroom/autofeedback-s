@@ -320,9 +320,9 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
   } else {
 
   // set the number of tests that passed
-     const text = `Points ${passed}/${numtests}
-Passing tests: ${passing}
-Failing tests: ${failing}`
+     const text = `Points ${passed}/${numtests}`
+//Passing tests: ${passing}
+//Failing tests: ${failing}`
   //log(color.bold.bgCyan.black(text))
   log(color.bold.bgCyan.black(text))
   core.setOutput('Points', `${passed}/${numtests}`)
