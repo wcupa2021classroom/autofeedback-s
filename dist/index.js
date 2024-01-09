@@ -13716,6 +13716,7 @@ const runCommand = async (test, cwd, timeout) => {
             }
             break;
     }
+    return output;
 };
 const run = async (test, cwd) => {
     // Timeouts are in minutes, but need to be in ms
@@ -13725,7 +13726,8 @@ const run = async (test, cwd) => {
     const elapsed = process.hrtime(start);
     // Subtract the elapsed seconds (0) and nanoseconds (1) to find the remaining timeout
     timeout -= Math.floor(elapsed[0] * 1000 + elapsed[1] / 1000000);
-    await runCommand(test, cwd, timeout);
+    const result = await runCommand(test, cwd, timeout);
+    return result;
 };
 exports.run = run;
 const runAll = async (tests, cwd) => {
@@ -13753,13 +13755,15 @@ const runAll = async (tests, cwd) => {
                 }
             }
             log(color.cyan(`📝 ${test.name}`));
-            await (0, exports.run)(test, cwd);
+            const result = await (0, exports.run)(test, cwd);
             // Restart command processing
             log('');
             log(`::${token}::`);
             log('');
             log(color.green(`✅ completed - ${test.name}`));
             log(``);
+            core.summary.addRaw(`#### passed ${test.name}`, true);
+            core.summary.addCodeBlock(result || "no output");
             if (test.points) {
                 points += test.points;
             }
@@ -13776,6 +13780,9 @@ const runAll = async (tests, cwd) => {
             if (!test.extra) {
                 failed = true;
                 if (error instanceof Error) {
+                    core.summary.addRaw(`#### failed ${test.name}`, true);
+                    core.summary.addCodeBlock(error.message);
+                    core.summary.write();
                     core.setFailed(error.message);
                 }
                 else {

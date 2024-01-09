@@ -137,7 +137,7 @@ const runSetup = async (test: Test, cwd: string, timeout: number): Promise<void>
   
 // }
 
-const runCommand = async (test: Test, cwd: string, timeout: number): Promise<void> => {
+const runCommand = async (test: Test, cwd: string, timeout: number) => {
   const child = spawn(test.run, {
     cwd,
     shell: true,
@@ -210,9 +210,10 @@ const runCommand = async (test: Test, cwd: string, timeout: number): Promise<voi
       }
       break
   }
+  return output
 }
 
-export const run = async (test: Test, cwd: string): Promise<void> => {
+export const run = async (test: Test, cwd: string) => {
   // Timeouts are in minutes, but need to be in ms
   let timeout = (test.timeout || 1) * 60 * 1000 || 30000
   const start = process.hrtime()
@@ -220,7 +221,8 @@ export const run = async (test: Test, cwd: string): Promise<void> => {
   const elapsed = process.hrtime(start)
   // Subtract the elapsed seconds (0) and nanoseconds (1) to find the remaining timeout
   timeout -= Math.floor(elapsed[0] * 1000 + elapsed[1] / 1000000)
-  await runCommand(test, cwd, timeout)
+  const result = await runCommand(test, cwd, timeout)
+  return result
 }
 
 export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => {
@@ -253,7 +255,7 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
       }
       log(color.cyan(`📝 ${test.name}`))
  
-      await run(test, cwd)
+      const result = await run(test, cwd)
       // Restart command processing
       log('')
       log(`::${token}::`)
@@ -261,6 +263,9 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
       log('')
       log(color.green(`✅ completed - ${test.name}`))
       log(``)
+      core.summary.addRaw(`#### passed ${test.name}`,true)
+      core.summary.addCodeBlock(result || "no output")
+          
       if (test.points) {
         points += test.points
       }
@@ -277,6 +282,9 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
       if (!test.extra) {
         failed = true
         if(error instanceof Error) {
+          core.summary.addRaw(`#### failed ${test.name}`,true)
+          core.summary.addCodeBlock(error.message)
+          core.summary.write()
             core.setFailed(error.message)
         } else {
             core.setFailed("Unknown exception")
