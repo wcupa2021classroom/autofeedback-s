@@ -45,7 +45,9 @@ export class TestOutputError extends TestError {
     Expected:
 ${expected}
     Actual:
-${actual}`)
+${actual}
+
+**Note: [debuggex](https://www.debuggex.com) will take the expected text in the first box and the actual text in the second box and show you a red line for where the test fails.`)
     this.expected = expected
     this.actual = actual
 
@@ -177,12 +179,84 @@ const runCommand = async (test: Test, cwd: string, timeout: number) => {
   const expected = normalizeLineEndings(test.output || '')
   const actual = normalizeLineEndings(output)
 
+
+  const diffMessage = (actual: string, expected: string): string => {
+    const linesActual = actual.split(/\r?\n/)
+    const linesExpected = expected.split(/\r?\n/)
+    const minLines = Math.min(linesActual.length, linesExpected.length)
+    const result = []
+    result.push(``)
+    result.push(`Num lines expected ` + linesExpected.length)
+    result.push(`  Num lines actual ` + linesActual.length)
+
+    let cActual = ``
+    let cExpected = ``
+    let expectedLine = ``
+    let actualLine = ``
+
+    result.push(``)
+    // Look at each line
+    let i
+    for (i = 0; i < minLines; i++) {
+      expectedLine = linesExpected[i]
+      actualLine = linesActual[i]
+
+      if (actualLine == expectedLine) {
+        result.push(color.green(`Line ` + i + `\tExpected: "` + expectedLine + `\\n"`))
+        result.push(color.green(`Line ` + i + `\t  Actual: "` + actualLine + `\\n"`))
+      } else {
+        result.push(color.red(`------- Mismatch on line ` + i))
+        const diff = [...expectedLine]
+        for (let j = 0; j < expectedLine.length; j++) {
+          if (actualLine[j] != expectedLine[j]) {
+            cActual = actualLine[j]
+            cExpected = expectedLine[j]
+            diff[j] = `^`
+          } else {
+            diff[j] = `_`
+          }
+        }
+
+        const diffLine = diff.join('')
+        result.push(``)
+        result.push(color.red(`EXPECTED: "` + expectedLine + `"`))
+        result.push(color.red(`  ACTUAL: "` + actualLine + `"`))
+        result.push(color.red(`           ` + diffLine))
+        result.push(``)
+        if (expectedLine.length >= actualLine.length) {
+          result.push(color.red(`Character '` + cActual + `' does not match expected character '` + cExpected + `'`))
+          result.push(``)
+        }
+        result.push(color.red(`Note: If both lines look the same, then it could be the an`))
+        result.push(color.red(`invisible whitespace such as a tab or newline. Highlighting`))
+        result.push(color.red(`and/or copying each line could help you figure out if there`))
+        result.push(color.red(`are hidden whitespace characters.`))
+        return result.join(os.EOL)
+      }
+    }
+
+    if (linesActual.length < linesExpected.length) {
+      result.push(``)
+      result.push(color.red(`Your program is missing output.`))
+      result.push(``)
+      result.push(color.red(`Missing output: "` + linesExpected[i] + `"`))
+    } else if (linesActual.length > linesExpected.length) {
+      result.push(``)
+      result.push(color.red(`Extra output found in your program output.`))
+      result.push(``)
+      result.push(color.red(`Extra output: "` + linesActual[i] + `"`))
+    }
+    return result.join(os.EOL)
+  }
+
   switch (test.comparison) {
     case 'exact':
       if (actual != expected) {
         //core.group(`Error: ${test.name}`, async() => {
-
-        throw new TestOutputError(`The output for test ${test.name} did not match`, expected, actual)
+        const result = diffMessage(actual, expected)
+        throw new TestError(`The output for test ${test.name} does not match:
+${result}`)
+        //throw new TestOutputError(`The output for test ${test.name} did not match`, expected, actual)
         //core.endGroup()
       }
       break
@@ -198,7 +272,10 @@ const runCommand = async (test: Test, cwd: string, timeout: number) => {
       // The default comparison mode is 'included'
       if (!actual.includes(expected)) {
         //core.group(`Error: ${test.name}`, async() => {
-        throw new TestOutputError(`The output for test ${test.name} did not match`, expected, actual)
+        const result = diffMessage(actual, expected)
+        throw new TestError(`The output for test ${test.name} did not match:
+${result}`)
+        //throw new TestOutputError(`The output for test ${test.name} did not match`, expected, actual)
         //core.endGroup()
       }
       break
