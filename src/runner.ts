@@ -358,11 +358,11 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
           const errors = []
           errors.push(error.message)
           if (error.message.indexOf("regex") != -1) {
-            core.summary.addRaw(`
-**Note:** [debuggex](https://www.debuggex.com) will take the *expected* text in the first box and the *actual* text in the second box and show you a *red line* for where the test fails.
-
-            `,true)
-            errors.push(`Note: https://www.debuggex.com will take the *expected* text in the first box and the *actual* text in the second box and show you a *red line* for where the test fails.`)
+            core.summary.addRaw('',true)
+            core.summary.addRaw('**Note:** [debuggex](https://www.debuggex.com) will take the *expected* text in the first box and the *actual* text in the second box and show you a *red line* for where the test fails.',true)
+            core.summary.addRaw('',true)
+            
+            errors.push(`Note: https://www.debuggex.com will take the Expected text in the first box and the Actual text in the second box and show you a red line for where the test fails.`)
             
           }
           //core.summary.write()
