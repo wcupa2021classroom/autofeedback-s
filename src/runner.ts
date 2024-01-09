@@ -179,7 +179,6 @@ const runCommand = async (test: Test, cwd: string, timeout: number) => {
   const expected = normalizeLineEndings(test.output || '')
   const actual = normalizeLineEndings(output)
 
-
   const diffMessage = (actual: string, expected: string): string => {
     const linesActual = actual.split(/\r?\n/)
     const linesExpected = expected.split(/\r?\n/)
