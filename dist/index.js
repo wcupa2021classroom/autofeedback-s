@@ -13579,7 +13579,11 @@ class TestTimeoutError extends TestError {
 exports.TestTimeoutError = TestTimeoutError;
 class TestOutputError extends TestError {
     constructor(message, expected, actual) {
-        super(`${message}%0AExpected:<br/>${expected}%0AActual:%0A${actual}`);
+        super(`${message}
+    Expected:
+    ${expected}
+    Actual:
+    ${actual}`);
         this.expected = expected;
         this.actual = actual;
         Error.captureStackTrace(this, TestOutputError);
