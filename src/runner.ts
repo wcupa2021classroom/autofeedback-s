@@ -311,11 +311,16 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
     log('')
   }
 
-  const text = `Tests Passed: ${passed}/${numtests}
-  Passing tests: ${passing}
-  Failing tests: ${failing}`
+  const text = `Tests Passed: ${passed}/${numtests}  
+  Passing tests: ${passing}  
+  Failing tests: ${failing}  `
+  core.summary.addRaw("## Test Summary",true)
+  core.summary.addRaw(text,true)
+  core.summary.write()
     //log(color.bold.bgCyan.black(text))
     log(color.bold.bgCyan.black(text))
+    log("")
+    log("")
     
     await setCheckRunOutput(text,"Summary")
   
@@ -333,7 +338,7 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
 //Passing tests: ${passing}
 //Failing tests: ${failing}`
   //log(color.bold.bgCyan.black(text))
-  log(color.bold.bgCyan.black(text))
+  //log(color.bold.bgCyan.black(text))
   core.setOutput('Points', `${passed}/${numtests}`)
   await setCheckRunOutput(text,"complete")
   }

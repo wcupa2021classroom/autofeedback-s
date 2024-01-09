@@ -13807,11 +13807,16 @@ const runAll = async (tests, cwd) => {
         log(`💪💪💪 You earned ${extraCreditPoints} extra credit points`);
         log('');
     }
-    const text = `Tests Passed: ${passed}/${numtests}
-  Passing tests: ${passing}
-  Failing tests: ${failing}`;
+    const text = `Tests Passed: ${passed}/${numtests}  
+  Passing tests: ${passing}  
+  Failing tests: ${failing}  `;
+    core.summary.addRaw("## Test Summary", true);
+    core.summary.addRaw(text, true);
+    core.summary.write();
     //log(color.bold.bgCyan.black(text))
     log(color.bold.bgCyan.black(text));
+    log("");
+    log("");
     await (0, output_1.setCheckRunOutput)(text, "Summary");
     // Set the number of points
     if (hasPoints) {
@@ -13826,7 +13831,7 @@ const runAll = async (tests, cwd) => {
         //Passing tests: ${passing}
         //Failing tests: ${failing}`
         //log(color.bold.bgCyan.black(text))
-        log(color.bold.bgCyan.black(text));
+        //log(color.bold.bgCyan.black(text))
         core.setOutput('Points', `${passed}/${numtests}`);
         await (0, output_1.setCheckRunOutput)(text, "complete");
     }
