@@ -187,10 +187,10 @@ const runCommand = async (test: Test, cwd: string, timeout: number): Promise<voi
     case 'regex':
       // Note: do not use expected here
       if (!actual.match(new RegExp(test.output || ''))) {
-        core.group(`Error: ${test.name}`, async()  => { 
-            await throwError(`The output for test ${test.name} did not match`, test.output || '', actual)
+        core.startGroup(`Error: ${test.name}`)
+        throw new TestOutputError(`The output for test ${test.name} did not match`, test.output || '', actual)
        
-        })
+        
         core.endGroup()
       }
       break
