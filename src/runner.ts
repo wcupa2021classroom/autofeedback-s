@@ -42,12 +42,11 @@ export class TestOutputError extends TestError {
 
   constructor(message: string, expected: string, actual: string) {
     super(`${message}
-    Expected:
+    Expected Regular Expression (regex) Match:
 ${expected}
     Actual:
-${actual}
+${actual}`)
 
-**Note: [debuggex](https://www.debuggex.com) will take the expected text in the first box and the actual text in the second box and show you a red line for where the test fails.`)
     this.expected = expected
     this.actual = actual
 
@@ -356,6 +355,9 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
         if (error instanceof Error) {
           core.summary.addRaw(`#### failed ${test.name}`, true)
           core.summary.addCodeBlock(error.message)
+          if (error.message.indexOf("regex") != -1) {
+            core.summary.addRaw('**Note:** [debuggex](https://www.debuggex.com) will take the *expected* text in the first box and the *actual* text in the second box and show you a *red line* for where the test fails.')
+          }
           //core.summary.write()
           core.setFailed(error.message)
         } else {
