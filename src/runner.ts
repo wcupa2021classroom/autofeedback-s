@@ -1,6 +1,6 @@
 import {spawn, ChildProcess} from 'child_process'
 import kill from 'tree-kill'
-//import {v4 as uuidv4} from 'uuid'
+import {v4 as uuidv4} from 'uuid'
 import * as core from '@actions/core'
 import {setCheckRunOutput} from './output'
 import * as os from 'os'
@@ -230,18 +230,20 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
   let numtests = 0
   let hasPoints = false
 
-  // https://help.github.com/en/actions/reference/development-tools-for-github-actions#stop-and-start-log-commands-stop-commands
-  //const token = uuidv4()
-  log('')
-  //log(`::stop-commands::${token}`)
-  log('')
-
+  
   let failed = false
   const passing = []
   const failing = []
 
   for (const test of tests) {
     numtests += 1
+    log('')
+    // https://help.github.com/en/actions/reference/development-tools-for-github-actions#stop-and-start-log-commands-stop-commands
+    const token = uuidv4()
+    log('')
+    log(`::stop-commands::${token}`)
+    log('')
+
     try {
       if (test.points) {
         hasPoints = true
@@ -250,8 +252,12 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
         }
       }
       log(color.cyan(`📝 ${test.name}`))
-      log('')
+ 
       await run(test, cwd)
+      // Restart command processing
+      log('')
+      log(`::${token}::`)
+
       log('')
       log(color.green(`✅ completed - ${test.name}`))
       log(``)
@@ -262,6 +268,10 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
       passed += 1
     } catch (error) {
       log('')
+      // Restart command processing
+      log('')
+      log(`::${token}::`)
+
       failing.push(test.name)
       log(color.red(`❌ failed - ${test.name}`))
       if (!test.extra) {
@@ -275,10 +285,7 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
     }
   }
 
-  // Restart command processing
-  log('')
-  //log(`::${token}::`)
-
+  
   if (failed) {
     // We need a good failure experience
     log('')
