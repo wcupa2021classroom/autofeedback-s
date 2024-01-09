@@ -9,6 +9,8 @@
 	3. focus is on tests passed rather than points
 	4. points and extra credit functionality still work
 	5. workflow has a badge that uses gradient colors (from other actions)
+	6. regex errors guide the user to [debuggex.com](https://www.debuggex.com)
+	7. other errors use a modified version of [Dr. Erickson's Diff output message function](https://github.com/DrErickson/autograding/blob/854db244b494c0fe3d3c7599cedd3033fd9ecae2/src/runner.ts#L168-L234) to help users find the error in their output. For the `included` match, it would be nice to identify some partial matches, but that will be for future changes.
 
 ## Basic Usage
 The autograder is a GitHub Action that must be triggered as part of a CI workflow.
