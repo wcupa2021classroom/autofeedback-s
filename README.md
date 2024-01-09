@@ -4,6 +4,11 @@
 - This repo is forked from https://github.com/stevenbitner/autograding.
 - Initially changes were to deal with staying updated.
 - Now, a couple of new features exist.
+    1. error output renders correctly 
+	2. all test results are put in the summary
+	3. focus is on tests passed rather than points
+	4. points and extra credit functionality still work
+	5. workflow has a badge that uses gradient colors (from other actions)
 
 ## Basic Usage
 The autograder is a GitHub Action that must be triggered as part of a CI workflow.
