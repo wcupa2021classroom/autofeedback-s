@@ -13340,12 +13340,12 @@ const runSetup = async (test, cwd, timeout) => {
     });
     await waitForExit(setup, timeout);
 };
-function throwError(header, exp, act) {
-    return new Promise((resolve) => {
-        core.error(`${header}\nExpected:\n${exp}\nActual:\n${act}`);
-        resolve("test");
-    });
-}
+// function throwError(header:string,exp:string,act:string) {
+//   return new Promise((resolve) => {
+//       core.error(`${header}\nExpected:\n${exp}\nActual:\n${act}`)
+//       resolve("test")
+//   });
+// }
 const runCommand = async (test, cwd, timeout) => {
     const child = (0, child_process_1.spawn)(test.run, {
         cwd,
@@ -13380,27 +13380,25 @@ const runCommand = async (test, cwd, timeout) => {
     switch (test.comparison) {
         case 'exact':
             if (actual != expected) {
-                core.group(`Error: ${test.name}`, async () => {
-                    await throwError(`The output for test ${test.name} did not match`, expected, actual);
-                });
-                core.endGroup();
+                //core.group(`Error: ${test.name}`, async() => {
+                throw new TestOutputError(`The output for test ${test.name} did not match`, expected, actual);
+                //core.endGroup()
             }
             break;
         case 'regex':
             // Note: do not use expected here
             if (!actual.match(new RegExp(test.output || ''))) {
-                core.startGroup(`Error: ${test.name}`);
+                //core.startGroup(`Error: ${test.name}`)
                 throw new TestOutputError(`The output for test ${test.name} did not match`, test.output || '', actual);
-                core.endGroup();
+                //core.endGroup()
             }
             break;
         default:
             // The default comparison mode is 'included'
             if (!actual.includes(expected)) {
-                core.group(`Error: ${test.name}`, async () => {
-                    await throwError(`The output for test ${test.name} did not match`, expected, actual);
-                });
-                core.endGroup();
+                //core.group(`Error: ${test.name}`, async() => { 
+                throw new TestOutputError(`The output for test ${test.name} did not match`, expected, actual);
+                //core.endGroup()
             }
             break;
     }
