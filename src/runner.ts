@@ -314,8 +314,8 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
 
   // set the number of tests that passed
   const text = `Tests Passed: ${passed}/${numtests}
-  Passing tests: $passing
-  Failing tests: $failing`
+  Passing tests: ${passing}
+  Failing tests: ${failing}`
   //log(color.bold.bgCyan.black(text))
   core.notice(text)
   

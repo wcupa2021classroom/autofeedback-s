@@ -13499,8 +13499,8 @@ const runAll = async (tests, cwd) => {
     }
     // set the number of tests that passed
     const text = `Tests Passed: ${passed}/${numtests}
-  Passing tests: $passing
-  Failing tests: $failing`;
+  Passing tests: ${passing}
+  Failing tests: ${failing}`;
     //log(color.bold.bgCyan.black(text))
     core.notice(text);
 };
