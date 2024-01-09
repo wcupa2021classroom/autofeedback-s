@@ -43,9 +43,9 @@ export class TestOutputError extends TestError {
   constructor(message: string, expected: string, actual: string) {
     super(`${message}
     Expected:
-    ${expected}
+${expected}
     Actual:
-    ${actual}`)
+${actual}`)
     this.expected = expected
     this.actual = actual
 
@@ -316,15 +316,19 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
     const text = `Points ${points}/${availablePoints}`
     log(color.bold.bgCyan.black(text))
     core.setOutput('Points', `${points}/${availablePoints}`)
-    await setCheckRunOutput(text)
-  }
+     await setCheckRunOutput(text)
+  } else {
 
   // set the number of tests that passed
-  const text = `Tests Passed: ${passed}/${numtests}
-  Passing tests: ${passing}
-  Failing tests: ${failing}`
+     const text = `Tests Passed: ${passed}/${numtests}
+Passing tests: ${passing}
+Failing tests: ${failing}`
   //log(color.bold.bgCyan.black(text))
-  core.notice(text)
+  log(color.bold.bgCyan.black(text))
+  core.setOutput('Points', `${passed}/${numtests}`)
+  await setCheckRunOutput(text)
+  }
+  
   
   
 }

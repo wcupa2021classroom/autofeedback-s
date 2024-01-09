@@ -13581,9 +13581,9 @@ class TestOutputError extends TestError {
     constructor(message, expected, actual) {
         super(`${message}
     Expected:
-    ${expected}
+${expected}
     Actual:
-    ${actual}`);
+${actual}`);
         this.expected = expected;
         this.actual = actual;
         Error.captureStackTrace(this, TestOutputError);
@@ -13814,12 +13814,16 @@ const runAll = async (tests, cwd) => {
         core.setOutput('Points', `${points}/${availablePoints}`);
         await (0, output_1.setCheckRunOutput)(text);
     }
-    // set the number of tests that passed
-    const text = `Tests Passed: ${passed}/${numtests}
-  Passing tests: ${passing}
-  Failing tests: ${failing}`;
-    //log(color.bold.bgCyan.black(text))
-    core.notice(text);
+    else {
+        // set the number of tests that passed
+        const text = `Tests Passed: ${passed}/${numtests}
+Passing tests: ${passing}
+Failing tests: ${failing}`;
+        //log(color.bold.bgCyan.black(text))
+        log(color.bold.bgCyan.black(text));
+        core.setOutput('Points', `${passed}/${numtests}`);
+        await (0, output_1.setCheckRunOutput)(text);
+    }
 };
 exports.runAll = runAll;
 
