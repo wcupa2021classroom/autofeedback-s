@@ -237,6 +237,8 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
   log('')
 
   let failed = false
+  const passing = []
+  const failing = []
 
   for (const test of tests) {
     numtests += 1
@@ -256,9 +258,11 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
       if (test.points) {
         points += test.points
       }
+      passing.push(test.name)
       passed += 1
     } catch (error) {
       log('')
+      failing.push(test.name)
       log(color.red(`❌ failed - ${test.name}`))
       if (!test.extra) {
         failed = true
@@ -282,6 +286,8 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
     log('')
     log('Please, look at the output and make sure it makes sense to you.')
     log(' If it does, then check the requirements to see what formatting may need to change.')
+    log('')
+    
   } else {
     log('')
     log(color.green('All tests passed'))
@@ -307,7 +313,9 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
   }
 
   // set the number of tests that passed
-  const text = `Tests Passed: ${passed}/${numtests} <br/> Next Line.`
+  const text = `Tests Passed: ${passed}/${numtests}
+  Passing tests: $passing
+  Failing tests: $failing`
   //log(color.bold.bgCyan.black(text))
   core.notice(text)
   
