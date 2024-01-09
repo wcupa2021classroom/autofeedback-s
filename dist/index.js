@@ -13862,9 +13862,11 @@ const runAll = async (tests, cwd) => {
                     errors.push(error.message);
                     if (error.message.indexOf('regex') != -1) {
                         core.summary.addRaw('', true);
-                        core.summary.addRaw('**Note:** [debuggex](https://www.debuggex.com) will take the *expected* text in the first box and the *actual* text in the second box and show you a *red line* for where the test fails.', true);
+                        const sText = '**Note:** [debuggex](https://www.debuggex.com) will take the *expected* text in the first box and the *actual* text in the second box and show you a *red line* for where the test fails.';
+                        core.summary.addRaw(sText, true);
                         core.summary.addRaw('', true);
-                        errors.push(`Note: https://www.debuggex.com will take the Expected text in the first box and the Actual text in the second box and show you a red line for where the test fails.`);
+                        const eText = `Note: https://www.debuggex.com will take the Expected text in the first box and the Actual text in the second box and show you a red line for where the test fails.`;
+                        errors.push(eText);
                     }
                     //core.summary.write()
                     log(errors.join(os.EOL));
