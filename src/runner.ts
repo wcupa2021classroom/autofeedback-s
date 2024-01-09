@@ -355,11 +355,18 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
         if (error instanceof Error) {
           core.summary.addRaw(`#### failed ${test.name}`, true)
           core.summary.addCodeBlock(error.message)
+          const errors = []
+          errors.push(error.message)
           if (error.message.indexOf("regex") != -1) {
-            core.summary.addRaw('**Note:** [debuggex](https://www.debuggex.com) will take the *expected* text in the first box and the *actual* text in the second box and show you a *red line* for where the test fails.')
+            core.summary.addRaw(`
+            **Note:** [debuggex](https://www.debuggex.com) will take the *expected* text in the first box and the *actual* text in the second box and show you a *red line* for where the test fails.
+            
+            `)
+            errors.push(`Note: https://www.debuggex.com will take the *expected* text in the first box and the *actual* text in the second box and show you a *red line* for where the test fails.`)
+            
           }
           //core.summary.write()
-          core.setFailed(error.message)
+          core.setFailed(errors.join(os.EOL))
         } else {
           core.setFailed('Unknown exception')
         }
