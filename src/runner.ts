@@ -134,7 +134,7 @@ const runSetup = async (test: Test, cwd: string, timeout: number): Promise<void>
 //       core.error(`${header}\nExpected:\n${exp}\nActual:\n${act}`)
 //       resolve("test")
 //   });
-  
+
 // }
 
 const runCommand = async (test: Test, cwd: string, timeout: number) => {
@@ -183,8 +183,6 @@ const runCommand = async (test: Test, cwd: string, timeout: number) => {
         //core.group(`Error: ${test.name}`, async() => {
 
         throw new TestOutputError(`The output for test ${test.name} did not match`, expected, actual)
-      
-      
         //core.endGroup()
       }
       break
@@ -193,19 +191,14 @@ const runCommand = async (test: Test, cwd: string, timeout: number) => {
       if (!actual.match(new RegExp(test.output || ''))) {
         //core.startGroup(`Error: ${test.name}`)
         throw new TestOutputError(`The output for test ${test.name} did not match`, test.output || '', actual)
-       
-        
         //core.endGroup()
       }
       break
     default:
       // The default comparison mode is 'included'
       if (!actual.includes(expected)) {
-        //core.group(`Error: ${test.name}`, async() => { 
-          throw new TestOutputError(`The output for test ${test.name} did not match`, expected, actual)
-        
-        
-        
+        //core.group(`Error: ${test.name}`, async() => {
+        throw new TestOutputError(`The output for test ${test.name} did not match`, expected, actual)
         //core.endGroup()
       }
       break
@@ -232,7 +225,6 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
   let numtests = 0
   let hasPoints = false
 
-  
   let failed = false
   const passing = []
   const failing = []
@@ -254,7 +246,7 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
         }
       }
       log(color.cyan(`📝 ${test.name}`))
- 
+
       const result = await run(test, cwd)
       // Restart command processing
       log('')
@@ -263,9 +255,9 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
       log('')
       log(color.green(`✅ completed - ${test.name}`))
       log(``)
-      core.summary.addRaw(`#### passed ${test.name}`,true)
-      core.summary.addCodeBlock(result || "no output")
-          
+      core.summary.addRaw(`#### passed ${test.name}`, true)
+      core.summary.addCodeBlock(result || 'no output')
+
       if (test.points) {
         points += test.points
       }
@@ -281,19 +273,18 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
       log(color.red(`❌ failed - ${test.name}`))
       if (!test.extra) {
         failed = true
-        if(error instanceof Error) {
-          core.summary.addRaw(`#### failed ${test.name}`,true)
+        if (error instanceof Error) {
+          core.summary.addRaw(`#### failed ${test.name}`, true)
           core.summary.addCodeBlock(error.message)
           //core.summary.write()
-            core.setFailed(error.message)
+          core.setFailed(error.message)
         } else {
-            core.setFailed("Unknown exception")
+          core.setFailed('Unknown exception')
         }
       }
     }
   }
 
-  
   if (failed) {
     // We need a good failure experience
     log('')
@@ -302,7 +293,6 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
     log('Please, look at the output and make sure it makes sense to you.')
     log(' If it does, then check the requirements to see what formatting may need to change.')
     log('')
-    
   } else {
     log('')
     log(color.green('All tests passed'))
@@ -322,37 +312,30 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
   const text = `Tests Passed: ${passed}/${numtests}  
   Passing tests: ${passing}  
   Failing tests: ${failing}  `
-  core.summary.addRaw("## Test Summary",true)
-  core.summary.addRaw(text,true)
+  core.summary.addRaw('## Test Summary', true)
+  core.summary.addRaw(text, true)
   core.summary.write()
-    //log(color.bold.bgCyan.black(text))
-    log(color.bold.bgCyan.black(text))
-    log("")
-    log("")
+  //log(color.bold.bgCyan.black(text))
+  log(color.bold.bgCyan.black(text))
+  log("")
+  log("")
     
-    await setCheckRunOutput(text,"Summary")
+  await setCheckRunOutput(text, 'Summary')
   
-
   // Set the number of points
   if (hasPoints) {
     const text = `Points ${points}/${availablePoints}`
     log(color.bold.bgCyan.black(text))
     core.setOutput('Points', `${points}/${availablePoints}`)
-     await setCheckRunOutput(text,"complete")
+    await setCheckRunOutput(text, 'complete')
   } else {
-
-  // set the number of tests that passed
-     const text = `Points ${passed}/${numtests}`
-//Passing tests: ${passing}
-//Failing tests: ${failing}`
-  //log(color.bold.bgCyan.black(text))
-  //log(color.bold.bgCyan.black(text))
-  core.setOutput('Points', `${passed}/${numtests}`)
-  await setCheckRunOutput(text,"complete")
+    // set the number of tests that passed
+    const text = `Points ${passed}/${numtests}`
+    //Passing tests: ${passing}
+    //Failing tests: ${failing}`
+    //log(color.bold.bgCyan.black(text))
+    //log(color.bold.bgCyan.black(text))
+    core.setOutput('Points', `${passed}/${numtests}`)
+    await setCheckRunOutput(text, 'complete')
   }
-
-  
-  
-  
-  
 }
