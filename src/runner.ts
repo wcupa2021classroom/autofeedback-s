@@ -125,6 +125,14 @@ const runSetup = async (test: Test, cwd: string, timeout: number): Promise<void>
   await waitForExit(setup, timeout)
 }
 
+function throwError(header:string,exp:string,act:string) {
+  return new Promise((resolve) => {
+      core.error(`${header}\nExpected:\n${exp}\nActual:\n${act}`)
+      resolve("test")
+  });
+  
+}
+
 const runCommand = async (test: Test, cwd: string, timeout: number): Promise<void> => {
   const child = spawn(test.run, {
     cwd,
@@ -170,15 +178,19 @@ const runCommand = async (test: Test, cwd: string, timeout: number): Promise<voi
       if (actual != expected) {
         core.group(`Error: ${test.name}`, async() => {
 
-        throw new TestOutputError(`The output for test ${test.name} did not match`, expected, actual)})
+        await throwError(`The output for test ${test.name} did not match`, expected, actual)
+      
+      })
         core.endGroup()
       }
       break
     case 'regex':
       // Note: do not use expected here
       if (!actual.match(new RegExp(test.output || ''))) {
-        core.group(`Error: ${test.name}`, async() => { 
-          throw new TestOutputError(`The output for test ${test.name} did not match`, test.output || '', actual)})
+        core.group(`Error: ${test.name}`, async()  => { 
+            await throwError(`The output for test ${test.name} did not match`, test.output || '', actual)
+       
+        })
         core.endGroup()
       }
       break
@@ -186,7 +198,10 @@ const runCommand = async (test: Test, cwd: string, timeout: number): Promise<voi
       // The default comparison mode is 'included'
       if (!actual.includes(expected)) {
         core.group(`Error: ${test.name}`, async() => { 
-          throw new TestOutputError(`The output for test ${test.name} did not match`, expected, actual)})
+          await throwError(`The output for test ${test.name} did not match`, expected, actual)
+        
+        
+        })
         core.endGroup()
       }
       break
