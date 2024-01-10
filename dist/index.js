@@ -13714,11 +13714,11 @@ const runCommand = async (test, cwd, timeout) => {
             expectedLine = linesExpected[i];
             actualLine = linesActual[i];
             if (actualLine == expectedLine) {
-                result.push(`🟩Line ` + i + `\tExpected: "` + expectedLine + `"🟩`);
-                result.push(`🟩Line ` + i + `\t  Actual: "` + actualLine + `"🟩`);
+                result.push(`🟩Line ` + i + `\tExpected: "` + expectedLine + `"`);
+                result.push(`🟩Line ` + i + `\t  Actual: "` + actualLine + `"`);
             }
             else {
-                result.push(`🟥------- Mismatch on line ` + i + `🟥`);
+                result.push(`🟥------- Mismatch on line ` + i);
                 const diff = [...expectedLine];
                 for (let j = 0; j < expectedLine.length; j++) {
                     if (actualLine[j] != expectedLine[j]) {
@@ -13732,32 +13732,32 @@ const runCommand = async (test, cwd, timeout) => {
                 }
                 const diffLine = diff.join('');
                 result.push(``);
-                result.push(`🟥EXPECTED: "` + expectedLine + `"🟥`);
-                result.push(`🟥  ACTUAL: "` + actualLine + `"🟥`);
-                result.push(`🟥           ` + diffLine + `🟥`);
+                result.push(`🟥EXPECTED: "` + expectedLine + `"`);
+                result.push(`🟥  ACTUAL: "` + actualLine + `"`);
+                result.push(`🟥           ` + diffLine);
                 result.push(``);
                 if (expectedLine.length >= actualLine.length) {
-                    result.push(`🟥Character '` + cActual + `' does not match expected character '` + cExpected + `'🟥`);
+                    result.push(`🟥Character '` + cActual + `' does not match expected character '` + cExpected + `'`);
                     result.push(``);
                 }
-                result.push(`🟥Note: If both lines look the same, then it could be the an🟥`);
-                result.push(`🟥invisible whitespace such as a tab or newline. Highlighting🟥`);
-                result.push(`🟥and/or copying each line could help you figure out if there🟥`);
-                result.push(`🟥are hidden whitespace characters.🟥`);
+                result.push(`🟥Note: If both lines look the same, then it could be the an`);
+                result.push(`🟥invisible whitespace such as a tab or newline. Highlighting`);
+                result.push(`🟥and/or copying each line could help you figure out if there`);
+                result.push(`🟥are hidden whitespace characters.`);
                 return result.join(os.EOL);
             }
         }
         if (linesActual.length < linesExpected.length) {
             result.push(``);
-            result.push(`🟥Your program is missing output.🟥`);
+            result.push(`🟥Your program is missing output.`);
             result.push(``);
-            result.push(`🟥Missing output: "` + linesExpected[i] + `"🟥`);
+            result.push(`🟥Missing output: "` + linesExpected[i] + `"`);
         }
         else if (linesActual.length > linesExpected.length) {
             result.push(``);
-            result.push(`🟥Extra output found in your program output.🟥`);
+            result.push(`🟥Extra output found in your program output.`);
             result.push(``);
-            result.push(`🟥Extra output: "` + linesActual[i] + `"🟥`);
+            result.push(`🟥Extra output: "` + linesActual[i] + `"`);
         }
         return result.join(os.EOL);
     };
