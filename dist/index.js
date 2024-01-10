@@ -13714,11 +13714,11 @@ const runCommand = async (test, cwd, timeout) => {
             expectedLine = linesExpected[i];
             actualLine = linesActual[i];
             if (actualLine == expectedLine) {
-                result.push(color.green(`Line ` + i + `\tExpected: "` + expectedLine + `\\n"`));
-                result.push(color.green(`Line ` + i + `\t  Actual: "` + actualLine + `\\n"`));
+                result.push(`🟩Line ` + i + `\tExpected: "` + expectedLine + `"🟩`);
+                result.push(`🟩Line ` + i + `\t  Actual: "` + actualLine + `"🟩`);
             }
             else {
-                result.push(color.red(`------- Mismatch on line ` + i));
+                result.push(`🟥------- Mismatch on line ` + i + `🟥`);
                 const diff = [...expectedLine];
                 for (let j = 0; j < expectedLine.length; j++) {
                     if (actualLine[j] != expectedLine[j]) {
@@ -13732,32 +13732,32 @@ const runCommand = async (test, cwd, timeout) => {
                 }
                 const diffLine = diff.join('');
                 result.push(``);
-                result.push(color.red(`EXPECTED: "` + expectedLine + `"`));
-                result.push(color.red(`  ACTUAL: "` + actualLine + `"`));
-                result.push(color.red(`           ` + diffLine));
+                result.push(`🟥EXPECTED: "` + expectedLine + `"🟥`);
+                result.push(`🟥  ACTUAL: "` + actualLine + `"🟥`);
+                result.push(`🟥           ` + diffLine + `🟥`);
                 result.push(``);
                 if (expectedLine.length >= actualLine.length) {
-                    result.push(color.red(`Character '` + cActual + `' does not match expected character '` + cExpected + `'`));
+                    result.push(`🟥Character '` + cActual + `' does not match expected character '` + cExpected + `'🟥`);
                     result.push(``);
                 }
-                result.push(color.red(`Note: If both lines look the same, then it could be the an`));
-                result.push(color.red(`invisible whitespace such as a tab or newline. Highlighting`));
-                result.push(color.red(`and/or copying each line could help you figure out if there`));
-                result.push(color.red(`are hidden whitespace characters.`));
+                result.push(`🟥Note: If both lines look the same, then it could be the an🟥`);
+                result.push(`🟥invisible whitespace such as a tab or newline. Highlighting🟥`);
+                result.push(`🟥and/or copying each line could help you figure out if there🟥`);
+                result.push(`🟥are hidden whitespace characters.🟥`);
                 return result.join(os.EOL);
             }
         }
         if (linesActual.length < linesExpected.length) {
             result.push(``);
-            result.push(color.red(`Your program is missing output.`));
+            result.push(`🟥Your program is missing output.🟥`);
             result.push(``);
-            result.push(color.red(`Missing output: "` + linesExpected[i] + `"`));
+            result.push(`🟥Missing output: "` + linesExpected[i] + `"🟥`);
         }
         else if (linesActual.length > linesExpected.length) {
             result.push(``);
-            result.push(color.red(`Extra output found in your program output.`));
+            result.push(`🟥Extra output found in your program output.🟥`);
             result.push(``);
-            result.push(color.red(`Extra output: "` + linesActual[i] + `"`));
+            result.push(`🟥Extra output: "` + linesActual[i] + `"🟥`);
         }
         return result.join(os.EOL);
     };
@@ -13838,7 +13838,7 @@ const runAll = async (tests, cwd) => {
             log('');
             log(color.green(`✅ completed - ${test.name}`));
             log(``);
-            core.summary.addRaw(`#### passed ${test.name}`, true);
+            core.summary.addRaw(`#### Passed ${test.name}`, true);
             core.summary.addCodeBlock(result || 'no output');
             if (test.points) {
                 points += test.points;
@@ -13852,11 +13852,11 @@ const runAll = async (tests, cwd) => {
             log('');
             log(`::${token}::`);
             failing.push(test.name);
-            log(color.red(`❌ failed - ${test.name}`));
+            log(color.yellow(`🚧 needs repair - ${test.name}`));
             if (!test.extra) {
                 failed = true;
                 if (error instanceof Error) {
-                    core.summary.addRaw(`#### failed ${test.name}`, true);
+                    core.summary.addRaw(`#### Needs Repair - ${test.name}`, true);
                     core.summary.addCodeBlock(error.message);
                     const errors = [];
                     errors.push(error.message);
