@@ -13836,9 +13836,9 @@ const runAll = async (tests, cwd) => {
             log('');
             log(`::${token}::`);
             log('');
-            log(color.green(`✅ completed - ${test.name}`));
+            log(color.green(`🏁 completed - ${test.name}`));
             log(``);
-            core.summary.addRaw(`#### Passed ${test.name}`, true);
+            core.summary.addRaw(`#### 🏁 Passed ${test.name}`, true);
             core.summary.addCodeBlock(result || 'no output');
             if (test.points) {
                 points += test.points;
@@ -13856,7 +13856,7 @@ const runAll = async (tests, cwd) => {
             if (!test.extra) {
                 failed = true;
                 if (error instanceof Error) {
-                    core.summary.addRaw(`#### Needs Repair - ${test.name}`, true);
+                    core.summary.addRaw(`#### 🚧 Needs Repair - ${test.name}`, true);
                     core.summary.addCodeBlock(error.message);
                     const errors = [];
                     errors.push(error.message);
@@ -13872,6 +13872,8 @@ const runAll = async (tests, cwd) => {
                     log(errors.join(os.EOL));
                 }
                 else {
+                    core.summary.addRaw(`#### 🚧 Needs Repair - ${test.name}`, true);
+                    core.summary.addRaw(`Unknown exception`, true);
                     log('Unknown exception');
                 }
             }

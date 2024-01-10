@@ -332,9 +332,9 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
       log(`::${token}::`)
 
       log('')
-      log(color.green(`✅ completed - ${test.name}`))
+      log(color.green(`🏁 completed - ${test.name}`))
       log(``)
-      core.summary.addRaw(`#### Passed ${test.name}`, true)
+      core.summary.addRaw(`#### 🏁 Passed ${test.name}`, true)
       core.summary.addCodeBlock(result || 'no output')
 
       if (test.points) {
@@ -353,7 +353,7 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
       if (!test.extra) {
         failed = true
         if (error instanceof Error) {
-          core.summary.addRaw(`#### Needs Repair - ${test.name}`, true)
+          core.summary.addRaw(`#### 🚧 Needs Repair - ${test.name}`, true)
           core.summary.addCodeBlock(error.message)
           const errors = []
           errors.push(error.message)
@@ -369,6 +369,9 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
           //core.summary.write()
           log(errors.join(os.EOL))
         } else {
+          core.summary.addRaw(`#### 🚧 Needs Repair - ${test.name}`, true)
+          core.summary.addRaw(`Unknown exception`, true)
+          
           log('Unknown exception')
         }
       }
