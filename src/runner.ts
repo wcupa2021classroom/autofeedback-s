@@ -371,7 +371,7 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
         } else {
           core.summary.addRaw(`#### 🚧 Needs Repair - ${test.name}`, true)
           core.summary.addRaw(`Unknown exception`, true)
-          
+
           log('Unknown exception')
         }
       }
