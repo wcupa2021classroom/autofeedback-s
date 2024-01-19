@@ -13687,7 +13687,7 @@ const runCommand = async (test, cwd, timeout) => {
     await waitForExit(child, timeout);
     // Eventually work off the the test type
     if ((!test.output || test.output == '') && (!test.input || test.input == '')) {
-        return;
+        return output;
     }
     const expected = normalizeLineEndings(test.output || '');
     const actual = normalizeLineEndings(output);
