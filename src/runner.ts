@@ -160,6 +160,7 @@ const runCommand = async (test: Test, cwd: string, timeout: number) => {
 
   child.stderr.on('data', chunk => {
     process.stderr.write(indent(chunk))
+    output += "Error: " + chunk
   })
 
   // Preload the inputs
