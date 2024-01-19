@@ -172,7 +172,7 @@ const runCommand = async (test: Test, cwd: string, timeout: number) => {
 
   // Eventually work off the the test type
   if ((!test.output || test.output == '') && (!test.input || test.input == '')) {
-    return
+    return output
   }
 
   const expected = normalizeLineEndings(test.output || '')
