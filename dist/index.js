@@ -13678,7 +13678,7 @@ const runCommand = async (test, cwd, timeout) => {
     });
     child.stderr.on('data', chunk => {
         process.stderr.write(indent(chunk));
-        output += "Error: " + chunk;
+        output += 'Error: ' + chunk;
     });
     // Preload the inputs
     if (test.input && test.input !== '') {
