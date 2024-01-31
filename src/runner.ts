@@ -77,7 +77,6 @@ const compareLines = (actualLine: string, expectedLine: string): string => {
     result.push(`🟩Expected: "` + expectedLine + `"`)
     result.push(`🟩  Actual: "` + actualLine + `"`)
   } else {
-    result.push(`🟥------- Mismatch`)
     const diff = [...expectedLine]
     for (let j = 0; j < expectedLine.length; j++) {
       if (actualLine[j] != expectedLine[j]) {
@@ -90,7 +89,6 @@ const compareLines = (actualLine: string, expectedLine: string): string => {
     }
 
     const diffLine = diff.join('')
-    result.push(``)
     result.push(`🟥EXPECTED: "` + expectedLine + `"`)
     result.push(`🟥  ACTUAL: "` + actualLine + `"`)
     result.push(`🟥           ` + diffLine)

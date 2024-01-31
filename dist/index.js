@@ -13611,7 +13611,6 @@ const compareLines = (actualLine, expectedLine) => {
         result.push(`🟩  Actual: "` + actualLine + `"`);
     }
     else {
-        result.push(`🟥------- Mismatch`);
         const diff = [...expectedLine];
         for (let j = 0; j < expectedLine.length; j++) {
             if (actualLine[j] != expectedLine[j]) {
@@ -13624,7 +13623,6 @@ const compareLines = (actualLine, expectedLine) => {
             }
         }
         const diffLine = diff.join('');
-        result.push(``);
         result.push(`🟥EXPECTED: "` + expectedLine + `"`);
         result.push(`🟥  ACTUAL: "` + actualLine + `"`);
         result.push(`🟥           ` + diffLine);
