@@ -69,6 +69,46 @@ const indent = (text: any): string => {
   return str
 }
 
+const compareLines = (actualLine: string, expectedLine: string): string => {
+  const result = []
+  let cActual = ``
+  let cExpected = ``
+    
+  if (actualLine == expectedLine) {
+    result.push(`🟩Expected: "` + expectedLine + `"`)
+    result.push(`🟩  Actual: "` + actualLine + `"`)
+  } else {
+    result.push(`🟥------- Mismatch`)
+    const diff = [...expectedLine]
+    for (let j = 0; j < expectedLine.length; j++) {
+      if (actualLine[j] != expectedLine[j]) {
+        cActual = actualLine[j]
+        cExpected = expectedLine[j]
+        diff[j] = `^`
+      } else {
+        diff[j] = `_`
+      }
+    }
+
+    const diffLine = diff.join('')
+    result.push(``)
+    result.push(`🟥EXPECTED: "` + expectedLine + `"`)
+    result.push(`🟥  ACTUAL: "` + actualLine + `"`)
+    result.push(`🟥           ` + diffLine)
+    result.push(``)
+    if (expectedLine.length >= actualLine.length) {
+      result.push(`🟥Character '` + cActual + `' does not match expected character '` + cExpected + `'`)
+      result.push(``)
+    }
+    result.push(`🟥Note: If both lines look the same, then it could be the an`)
+    result.push(`🟥invisible whitespace such as a tab or newline. Highlighting`)
+    result.push(`🟥and/or copying each line could help you figure out if there`)
+    result.push(`🟥are hidden whitespace characters.`)
+    
+  }
+  return result.join(os.EOL)
+}
+
 const waitForExit = async (child: ChildProcess, timeout: number): Promise<void> => {
   // eslint-disable-next-line no-undef
   return new Promise((resolve, reject) => {
@@ -189,9 +229,15 @@ const runCommand = async (test: Test, cwd: string, timeout: number) => {
     result.push(actual)
     result.push('')
     result.push(``)
-    result.push(`Num lines expected ` + linesExpected.length)
-    result.push(`  Num lines actual ` + linesActual.length)
-
+    result.push(`Num lines to test ` + linesExpected.length)
+    result.push(`  Num lines total ` + linesActual.length)
+    if (linesExpected.length > linesActual.length) {
+      result.push(` mising ` + (linesExpected.length - linesActual.length) + ` lines of output`)
+    } else if (linesExpected.length < linesActual.length) {
+      result.push(` extra ` + (linesActual.length - linesExpected.length) + ` lines of output`)
+    } else {
+      result.push(`line count is correct.`)
+    }
     let cActual = ``
     let cExpected = ``
     let expectedLine = ``
@@ -200,55 +246,61 @@ const runCommand = async (test: Test, cwd: string, timeout: number) => {
     result.push(``)
     // Look at each line
     let i
-    for (i = 0; i < minLines; i++) {
-      expectedLine = linesExpected[i]
-      actualLine = linesActual[i]
+    if (linesExpected.length == linesActual.length) {
+      for (i = 0; i < minLines; i++) {
+        expectedLine = linesExpected[i]
+        actualLine = linesActual[i]
 
-      if (actualLine == expectedLine) {
-        result.push(`🟩Line ` + i + `\tExpected: "` + expectedLine + `"`)
-        result.push(`🟩Line ` + i + `\t  Actual: "` + actualLine + `"`)
-      } else {
-        result.push(`🟥------- Mismatch on line ` + i)
-        const diff = [...expectedLine]
-        for (let j = 0; j < expectedLine.length; j++) {
-          if (actualLine[j] != expectedLine[j]) {
-            cActual = actualLine[j]
-            cExpected = expectedLine[j]
-            diff[j] = `^`
-          } else {
-            diff[j] = `_`
+        if (actualLine == expectedLine) {
+          result.push(`🟩Line ` + i + `\tExpected: "` + expectedLine + `"`)
+          result.push(`🟩Line ` + i + `\t  Actual: "` + actualLine + `"`)
+        } else {
+          result.push(`🟥------- Mismatch on line ` + i)
+          const diff = [...expectedLine]
+          for (let j = 0; j < expectedLine.length; j++) {
+            if (actualLine[j] != expectedLine[j]) {
+              cActual = actualLine[j]
+              cExpected = expectedLine[j]
+              diff[j] = `^`
+            } else {
+              diff[j] = `_`
+            }
           }
-        }
 
-        const diffLine = diff.join('')
-        result.push(``)
-        result.push(`🟥EXPECTED: "` + expectedLine + `"`)
-        result.push(`🟥  ACTUAL: "` + actualLine + `"`)
-        result.push(`🟥           ` + diffLine)
-        result.push(``)
-        if (expectedLine.length >= actualLine.length) {
-          result.push(`🟥Character '` + cActual + `' does not match expected character '` + cExpected + `'`)
+          const diffLine = diff.join('')
           result.push(``)
+          result.push(`🟥EXPECTED: "` + expectedLine + `"`)
+          result.push(`🟥  ACTUAL: "` + actualLine + `"`)
+          result.push(`🟥           ` + diffLine)
+          result.push(``)
+          if (expectedLine.length >= actualLine.length) {
+            result.push(`🟥Character '` + cActual + `' does not match expected character '` + cExpected + `'`)
+            result.push(``)
+          }
+          result.push(`🟥Note: If both lines look the same, then it could be the an`)
+          result.push(`🟥invisible whitespace such as a tab or newline. Highlighting`)
+          result.push(`🟥and/or copying each line could help you figure out if there`)
+          result.push(`🟥are hidden whitespace characters.`)
+          return result.join(os.EOL)
         }
-        result.push(`🟥Note: If both lines look the same, then it could be the an`)
-        result.push(`🟥invisible whitespace such as a tab or newline. Highlighting`)
-        result.push(`🟥and/or copying each line could help you figure out if there`)
-        result.push(`🟥are hidden whitespace characters.`)
-        return result.join(os.EOL)
+      }
+    } else {
+      result.push(`comparing each line of expected output against each line of actual output`)
+      
+      for(let k = 0; k < linesExpected.length;++k) {
+        expectedLine = linesExpected[k]
+        for(let l = 0; l < linesActual.length; ++l) {
+          actualLine = linesActual[l]
+          let compare = compareLines(actualLine,expectedLine)
+          result.push(`expected line ` + k + ` actual line ` + l)
+          result.push(compare)
+
+
+        }
       }
     }
 
-    if (linesActual.length < linesExpected.length) {
-      result.push(``)
-      result.push(`🟥Your program is missing output.`)
-      result.push(``)
-      result.push(`🟥Missing output: "` + linesExpected[i] + `"`)
-    } else if (linesActual.length > linesExpected.length) {
-      result.push(``)
-      result.push(`🟥Extra output found in your program output.`)
-      result.push(``)
-      result.push(`🟥Extra output: "` + linesActual[i] + `"`)
-    }
+    
     return result.join(os.EOL)
   }
 
