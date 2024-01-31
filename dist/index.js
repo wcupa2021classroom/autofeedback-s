@@ -13737,6 +13737,8 @@ const runCommand = async (test, cwd, timeout) => {
         result.push('Full program output:');
         result.push(actual);
         result.push('');
+        result.push('Full expected output for this test:');
+        result.push(expected);
         result.push(``);
         result.push(`Num lines to test ` + linesExpected.length);
         result.push(`  Num lines total ` + linesActual.length);
