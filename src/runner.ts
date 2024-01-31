@@ -71,8 +71,8 @@ const indent = (text: any): string => {
 
 const compareLines = (actualLine: string, expectedLine: string): string => {
   const result = []
-  let cActual = ``
-  let cExpected = ``
+  //let cActual = ``
+  //let cExpected = ``
   if (actualLine == expectedLine) {
     result.push(`🟩Expected: "` + expectedLine + `"`)
     result.push(`🟩  Actual: "` + actualLine + `"`)
@@ -81,8 +81,8 @@ const compareLines = (actualLine: string, expectedLine: string): string => {
     const diff = [...expectedLine]
     for (let j = 0; j < expectedLine.length; j++) {
       if (actualLine[j] != expectedLine[j]) {
-        cActual = actualLine[j]
-        cExpected = expectedLine[j]
+        //cActual = actualLine[j]
+        //cExpected = expectedLine[j]
         diff[j] = `^`
       } else {
         diff[j] = `_`
@@ -95,14 +95,14 @@ const compareLines = (actualLine: string, expectedLine: string): string => {
     result.push(`🟥  ACTUAL: "` + actualLine + `"`)
     result.push(`🟥           ` + diffLine)
     result.push(``)
-    if (expectedLine.length >= actualLine.length) {
-      result.push(`🟥Character '` + cActual + `' does not match expected character '` + cExpected + `'`)
-      result.push(``)
-    }
-    result.push(`🟥Note: If both lines look the same, then it could be the an`)
-    result.push(`🟥invisible whitespace such as a tab or newline. Highlighting`)
-    result.push(`🟥and/or copying each line could help you figure out if there`)
-    result.push(`🟥are hidden whitespace characters.`)
+    //if (expectedLine.length >= actualLine.length) {
+    //  result.push(`🟥Character '` + cActual + `' does not match expected character '` + cExpected + `'`)
+    //  result.push(``)
+    //}
+    //result.push(`🟥Note: If both lines look the same, then it could be the an`)
+    //result.push(`🟥invisible whitespace such as a tab or newline. Highlighting`)
+    //result.push(`🟥and/or copying each line could help you figure out if there`)
+    //result.push(`🟥are hidden whitespace characters.`)
   }
   return result.join(os.EOL)
 }
