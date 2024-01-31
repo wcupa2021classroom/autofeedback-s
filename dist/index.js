@@ -13803,7 +13803,7 @@ const runCommand = async (test, cwd, timeout) => {
                 expectedLine = linesExpected[k];
                 for (let l = 0; l < linesActual.length; ++l) {
                     actualLine = linesActual[l];
-                    let compare = compareLines(actualLine, expectedLine);
+                    const compare = compareLines(actualLine, expectedLine);
                     result.push(`expected line ` + k + ` actual line ` + l);
                     result.push(compare);
                 }

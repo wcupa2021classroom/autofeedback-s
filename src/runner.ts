@@ -73,7 +73,6 @@ const compareLines = (actualLine: string, expectedLine: string): string => {
   const result = []
   let cActual = ``
   let cExpected = ``
-    
   if (actualLine == expectedLine) {
     result.push(`🟩Expected: "` + expectedLine + `"`)
     result.push(`🟩  Actual: "` + actualLine + `"`)
@@ -104,7 +103,6 @@ const compareLines = (actualLine: string, expectedLine: string): string => {
     result.push(`🟥invisible whitespace such as a tab or newline. Highlighting`)
     result.push(`🟥and/or copying each line could help you figure out if there`)
     result.push(`🟥are hidden whitespace characters.`)
-    
   }
   return result.join(os.EOL)
 }
@@ -286,21 +284,16 @@ const runCommand = async (test: Test, cwd: string, timeout: number) => {
       }
     } else {
       result.push(`comparing each line of expected output against each line of actual output`)
-      
-      for(let k = 0; k < linesExpected.length;++k) {
+      for (let k = 0; k < linesExpected.length; ++k) {
         expectedLine = linesExpected[k]
-        for(let l = 0; l < linesActual.length; ++l) {
+        for (let l = 0; l < linesActual.length; ++l) {
           actualLine = linesActual[l]
-          let compare = compareLines(actualLine,expectedLine)
+          const compare = compareLines(actualLine, expectedLine)
           result.push(`expected line ` + k + ` actual line ` + l)
           result.push(compare)
-
-
         }
       }
     }
-
-    
     return result.join(os.EOL)
   }
 
