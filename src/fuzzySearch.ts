@@ -6,6 +6,7 @@ export const fuzzySearch = (input: string, toFind: string): string => {
 
   const closestIndex = windows.reduce((prev, curr, index) => {
     const score = jaroWinklerSimilarity(curr, toFind)
+    console.log(curr + ' : ' + score)
     return prev[1] < score ? [index, score] : prev
   }, firstDistance)[0]
 
@@ -49,6 +50,7 @@ const jaroWinklerSimilarity = (str1: string, str2: string): number => {
   const len2 = str2.length
 
   // Max distance between characters to be considered matching
+  // This will cause inaccuracies with shorter words (min length for some accuracy is 4)
   const maxDist = Math.floor(Math.max(len1, len2) / 2) - 1
 
   let matches = 0
@@ -96,5 +98,5 @@ const jaroWinklerSimilarity = (str1: string, str2: string): number => {
   }
 
   // 0.1 is based on Winkler's original work. Can be any value in the range (0, 0.25]
-  return jaro + prefixLength * 0.1 * (1 - jaro)
+  return jaro + prefixLength * 0.25 * (1 - jaro)
 }

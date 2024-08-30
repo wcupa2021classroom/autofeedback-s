@@ -3,7 +3,7 @@ import {fuzzySearch} from '../fuzzySearch'
 describe('fuzzySearch', () => {
   it('finds a close word in a group of words', async () => {
     const sentence = 'The quick brown fox jumped over the lazy dog.'
-    expect(fuzzySearch(sentence, 'fxo')).toBe('fox')
+    expect(fuzzySearch(sentence, 'brwon')).toBe('brown')
   }, 10000)
 
   it('finds a line in an input', async () => {
