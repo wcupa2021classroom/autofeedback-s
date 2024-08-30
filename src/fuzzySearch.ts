@@ -2,11 +2,11 @@
 export const fuzzySearch = (input: string, toFind: string): string => {
   const windows = toWindows(input.replace(/\r?\n/g, ' '), toFind.length)
 
-  const firstDistance = [0, jaroSimilarity(windows[0], toFind)]
+  const firstDistance = [0, jaroWinklerSimilarity(windows[0], toFind)]
 
   const closestIndex = windows.reduce((prev, curr, index) => {
-    const distance = jaroSimilarity(curr, toFind)
-    return prev[1] < distance ? [index, distance] : prev
+    const score = jaroWinklerSimilarity(curr, toFind)
+    return prev[1] < score ? [index, score] : prev
   }, firstDistance)[0]
 
   return windows[closestIndex]
@@ -35,11 +35,14 @@ const toWindows = (input: string, size: number): string[] => {
 }
 
 /**
- * Calculates the Jaro Similarity between two strings.
- * The range is from 0 to 1 where 0 means there is no similarity and 1 means they are equal.
+ * Calculates the Jaro-Winkler Similarity between two strings.
+ * The Jaro Similarity value range is from 0 to 1 where 0 means there is no similarity and 1 means they are equal.
+ *
+ * Then the Jaro-Winkler Similarity is calculated by multiplying the length of a common prefix up to four characters to
+ * a constant `p`
  * Algorithm described here: https://en.wikipedia.org/wiki/Jaro%E2%80%93Winkler_distance
  */
-const jaroSimilarity = (str1: string, str2: string): number => {
+const jaroWinklerSimilarity = (str1: string, str2: string): number => {
   if (str1 == str2) return 1.0
 
   const len1 = str1.length
@@ -85,5 +88,13 @@ const jaroSimilarity = (str1: string, str2: string): number => {
 
   transpositions /= 2
 
-  return (matches / len1 + matches / len2 + (matches - transpositions) / matches) / 3.0
+  const jaro = (matches / len1 + matches / len2 + (matches - transpositions) / matches) / 3.0
+
+  let prefixLength = 0
+  for (let i = 0; i < Math.min(str1.length, str2.length, 4); i++) {
+    if (str1.charAt(i) == str2.charAt(i)) prefixLength++
+  }
+
+  // 0.1 is based on Winkler's original work. Can be any value in the range (0, 0.25]
+  return jaro + prefixLength * 0.1 * (1 - jaro)
 }
