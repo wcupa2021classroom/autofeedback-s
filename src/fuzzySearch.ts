@@ -6,7 +6,6 @@ export const fuzzySearch = (input: string, toFind: string): string => {
 
   const closestIndex = windows.reduce((prev, curr, index) => {
     const score = jaroWinklerSimilarity(curr, toFind)
-    console.log(curr + ' : ' + score)
     return prev[1] < score ? [index, score] : prev
   }, firstDistance)[0]
 
