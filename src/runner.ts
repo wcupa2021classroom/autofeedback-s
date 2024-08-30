@@ -315,7 +315,7 @@ const runCommand = async (test: Test, cwd: string, timeout: number) => {
     result.push('🟥EXPECTED: "' + expected + '"')
 
     // We do not want to consider line endings in the number in character counts
-    const closestIndex = actual.replace(/\r?\n/g, '').indexOf(closest[1])
+    const closestIndex = actual.replace(/\r?\n/g, '').indexOf(closest)
     let charCount = 0
     let currLine = 1
     while (charCount < closestIndex) {
@@ -323,7 +323,7 @@ const runCommand = async (test: Test, cwd: string, timeout: number) => {
       currLine++
     }
 
-    result.push('🟥 CLOSEST: "' + closest[1] + '" starting on line ' + currLine + ' pos ' + closestIndex)
+    result.push('🟥 CLOSEST: "' + closest + '" starting on line ' + currLine + ' pos ' + closestIndex)
     result.push('')
 
     return result.join(os.EOL)

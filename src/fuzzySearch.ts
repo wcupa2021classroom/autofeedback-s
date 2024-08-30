@@ -1,5 +1,5 @@
 /** Performs a fuzzy search over string input to find the closest matching item */
-export const fuzzySearch = (input: string, toFind: string): [number, string] => {
+export const fuzzySearch = (input: string, toFind: string): string => {
   const windows = toWindows(input.replace(/\r?\n/g, ' '), toFind.length)
 
   const firstDistance = [0, jaroSimilarity(windows[0], toFind)]
@@ -9,7 +9,7 @@ export const fuzzySearch = (input: string, toFind: string): [number, string] => 
     return prev[1] < distance ? [index, distance] : prev
   }, firstDistance)[0]
 
-  return [closestIndex, windows[closestIndex]]
+  return windows[closestIndex]
 }
 
 /**
