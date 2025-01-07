@@ -1,9 +1,17 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 
-export const setCheckRunOutput = async (text: string, suffix: string): Promise<void> => {
+export const setCheckRunOutput = async (
+  text: string,
+  suffix: string,
+  level: 'failure' | 'notice' | 'warning' = 'notice',
+): Promise<void> => {
   // If we have nothing to output, then bail
   if (text === '') return
+  const legalNotices = ['notice', 'error', 'warning']
+  if (!level || !legalNotices.includes(level)) {
+    level = 'notice'
+  }
 
   // Our action will need to API access the repository so we require a token
   // This will need to be set in the calling workflow, otherwise we'll exit
@@ -63,7 +71,7 @@ export const setCheckRunOutput = async (text: string, suffix: string): Promise<v
           path: '.github',
           start_line: 1,
           end_line: 1,
-          annotation_level: 'notice',
+          annotation_level: level,
           message: text,
           title: `Autograding ${suffix}`,
         },

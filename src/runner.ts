@@ -2,7 +2,7 @@ import {spawn, ChildProcess} from 'child_process'
 import kill from 'tree-kill'
 import {v4 as uuidv4} from 'uuid'
 import * as core from '@actions/core'
-import {setCheckRunOutput} from './output'
+//import {setCheckRunOutput} from './output'
 import * as os from 'os'
 import chalk from 'chalk'
 import {fuzzySearch} from './fuzzySearch'
@@ -522,9 +522,9 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
   if (hasPoints) {
     const text = `Points ${points}/${availablePoints}`
     log(color.bold.bgCyan.black(text))
-    //core.setOutput('Points', `${points}/${availablePoints}`)
-    await setCheckRunOutput(text, 'complete')
-    //core.notice(text, {title: 'Autograding complete'})
+    core.setOutput('Points', `${points}/${availablePoints}`)
+    //await setCheckRunOutput(text, 'complete')
+    core.notice(text, {title: 'Autograding complete'})
   } else {
     // set the number of tests that passed
     const text = `Points ${passed}/${numtests}`
@@ -532,8 +532,8 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
     //Failing tests: ${failing}`
     //log(color.bold.bgCyan.black(text))
     //log(color.bold.bgCyan.black(text))
-    //core.setOutput('Points', `${passed}/${numtests}`)
-    await setCheckRunOutput(text, 'complete')
-    //core.notice(text, {title: 'Autograding complete'})
+    core.setOutput('Points', `${passed}/${numtests}`)
+    //await setCheckRunOutput(text, 'complete')
+    core.notice(text, {title: 'Autograding complete'})
   }
 }
