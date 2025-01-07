@@ -438,7 +438,7 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
       log(color.green(`🏁 completed - ${test.name}`))
       log(``)
       core.summary.addRaw(`#### 🏁 Passed ${test.name}`, true)
-      core.summary.addRaw('```\n' + result + '\n```' || 'no output')
+      core.summary.addRaw('```\n' + result + '\n```\n' || 'no output')
 
       if (test.points) {
         points += test.points
@@ -457,7 +457,7 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
         failed = true
         if (error instanceof Error) {
           core.summary.addRaw(`#### 🚧 Needs Repair - ${test.name}`, true)
-          core.summary.addRaw('```\n' + error.message + '\n```')
+          core.summary.addRaw('```\n' + error.message + '\n```\n')
           const errors = []
           errors.push(error.message)
           if (error.message.indexOf('regex') != -1) {
