@@ -506,10 +506,11 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
     log('')
   }
 
-  const text = `Tests Passed: ${passed}/${numtests}  
-  text += '\nCheck Annotations for individual test results\n'
+  let text = `Tests Passed: ${passed}/${numtests}  
   Passing tests: ${passing}  
   Failing tests: ${failing}  `
+  text += '\nCheck Annotations for individual test results\n'
+
   core.summary.addRaw('## Test Summary', true)
   core.summary.addRaw(text, true)
   core.summary.write()
@@ -518,7 +519,7 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
   log('')
   log('')
 
-  core.notice(text, {title: 'Testing Summary'})
+  //core.notice(text, {title: 'Testing Summary'})
   await setCheckRunOutput(text, 'Summary')
 
   // Set the number of points
@@ -534,7 +535,7 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
     //Passing tests: ${passing}
     //Failing tests: ${failing}`
     //log(color.bold.bgCyan.black(text))
-    //log(color.bold.bgCyan.black(text))
+    log(color.bold.bgCyan.black(text))
     core.setOutput('Points', `${passed}/${numtests}`)
     await setCheckRunOutput(text, 'complete')
     //core.notice(text, {title: 'Autograding complete'})

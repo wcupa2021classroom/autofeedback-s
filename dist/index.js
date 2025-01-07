@@ -14018,10 +14018,10 @@ const runAll = async (tests, cwd) => {
         log(`💪💪💪 You earned ${extraCreditPoints} extra credit points`);
         log('');
     }
-    const text = `Tests Passed: ${passed}/${numtests}  
-  text += '\nCheck Annotations for individual test results\n'
+    let text = `Tests Passed: ${passed}/${numtests}  
   Passing tests: ${passing}  
   Failing tests: ${failing}  `;
+    text += '\nCheck Annotations for individual test results\n';
     core.summary.addRaw('## Test Summary', true);
     core.summary.addRaw(text, true);
     core.summary.write();
@@ -14029,7 +14029,7 @@ const runAll = async (tests, cwd) => {
     log(color.bold.bgCyan.black(text));
     log('');
     log('');
-    core.notice(text, { title: 'Testing Summary' });
+    //core.notice(text, {title: 'Testing Summary'})
     await (0, output_1.setCheckRunOutput)(text, 'Summary');
     // Set the number of points
     if (hasPoints) {
@@ -14045,7 +14045,7 @@ const runAll = async (tests, cwd) => {
         //Passing tests: ${passing}
         //Failing tests: ${failing}`
         //log(color.bold.bgCyan.black(text))
-        //log(color.bold.bgCyan.black(text))
+        log(color.bold.bgCyan.black(text));
         core.setOutput('Points', `${passed}/${numtests}`);
         await (0, output_1.setCheckRunOutput)(text, 'complete');
         //core.notice(text, {title: 'Autograding complete'})
