@@ -2,7 +2,7 @@ import {spawn, ChildProcess} from 'child_process'
 import kill from 'tree-kill'
 import {v4 as uuidv4} from 'uuid'
 import * as core from '@actions/core'
-import {setCheckRunOutput} from './output'
+//import {setCheckRunOutput} from './output'
 import * as os from 'os'
 import chalk from 'chalk'
 import {fuzzySearch} from './fuzzySearch'
@@ -435,11 +435,11 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
       log(`::${token}::`)
 
       log('')
-      log(color.green(`🏁 completed - ${test.name}`))
-      log(``)
-      let notice = `🏁 Passed ${test.name}\n`
-      notice += '```\n' + result + '\n```\n'
-      core.notice(notice)
+      //log(color.green(`🏁 completed - ${test.name}`))
+      //log(``)
+      const nAnn = {title: `🏁 Passed ${test.name}`}
+      const notice = '\n' + result + '\n'
+      core.notice(notice, nAnn)
 
       if (test.points) {
         points += test.points
@@ -453,12 +453,12 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
       log(`::${token}::`)
 
       failing.push(test.name)
-      log(color.yellow(`🚧 needs repair - ${test.name}`))
+      //log(color.yellow(`🚧 needs repair - ${test.name}`))
       if (!test.extra) {
         failed = true
         if (error instanceof Error) {
-          let eMsg = `🚧 Needs Repair - ${test.name}\n`
-          eMsg += '\n' + error.message + '\n\n'
+          const eAnn = {title: `🚧 Needs Repair - ${test.name}`}
+          let eMsg = error.message + '\n'
           const errors = []
           errors.push(error.message)
           if (error.message.indexOf('regex') != -1) {
@@ -466,14 +466,14 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
             eMsg += eText
             errors.push(eText)
           }
-          core.error(eMsg)
+          core.error(eMsg, eAnn)
           //core.summary.write()
-          log(errors.join(os.EOL))
+          //log(errors.join(os.EOL))
         } else {
-          let eMsg = `🚧 Needs Repair - ${test.name}\n`
-          eMsg += `Unknown Exception: ${error}`
-          core.error(eMsg)
-          log('Unknown exception')
+          const eAnn = {title: `🚧 Needs Repair - ${test.name}`}
+          const eMsg = `Unknown Exception: ${error}`
+          core.error(eMsg, eAnn)
+          //log('Unknown exception')
         }
       }
     }
@@ -504,25 +504,27 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
   }
 
   const text = `Tests Passed: ${passed}/${numtests}  
+  text += '\nCheck Annotations for individual test results\n'
   Passing tests: ${passing}  
   Failing tests: ${failing}  `
   core.summary.addRaw('## Test Summary', true)
   core.summary.addRaw(text, true)
-  core.summary.addRaw('Check *annotations* for individual test results', true)
   core.summary.write()
   //log(color.bold.bgCyan.black(text))
   log(color.bold.bgCyan.black(text))
   log('')
   log('')
 
-  await setCheckRunOutput(text, 'Summary')
+  core.notice(text, {title: 'Testing Summary'})
+  //await setCheckRunOutput(text, 'Summary')
 
   // Set the number of points
   if (hasPoints) {
     const text = `Points ${points}/${availablePoints}`
     log(color.bold.bgCyan.black(text))
-    core.setOutput('Points', `${points}/${availablePoints}`)
-    await setCheckRunOutput(text, 'complete')
+    //core.setOutput('Points', `${points}/${availablePoints}`)
+    //await setCheckRunOutput(text, 'complete')
+    core.notice(text, {title: 'Autograding complete'})
   } else {
     // set the number of tests that passed
     const text = `Points ${passed}/${numtests}`
@@ -530,7 +532,8 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
     //Failing tests: ${failing}`
     //log(color.bold.bgCyan.black(text))
     //log(color.bold.bgCyan.black(text))
-    core.setOutput('Points', `${passed}/${numtests}`)
-    await setCheckRunOutput(text, 'complete')
+    //core.setOutput('Points', `${passed}/${numtests}`)
+    //await setCheckRunOutput(text, 'complete')
+    core.notice(text, {title: 'Autograding complete'})
   }
 }
