@@ -176,7 +176,7 @@ const runSetup = async (test: Test, cwd: string, timeout: number): Promise<void>
     } else if (error instanceof Error) {
       throw new Error(`${output}\n${error.message}`)
     } else {
-      throw new Error(`${output}\nUnknown ERROR`)
+      throw new Error(`${output}\nUnknown ERROR: ${error}`)
     }
   }
 }
@@ -229,7 +229,7 @@ const runCommand = async (test: Test, cwd: string, timeout: number) => {
     } else if (error instanceof Error) {
       throw new Error(`${output}\n${error.message}`)
     } else {
-      throw new Error(`${output}\nUnknown ERROR`)
+      throw new Error(`${output}\nUnknown ERROR: ${error}`)
     }
   }
 

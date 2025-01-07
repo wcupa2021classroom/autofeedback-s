@@ -13704,7 +13704,7 @@ const runSetup = async (test, cwd, timeout) => {
             throw new Error(`${output}\n${error.message}`);
         }
         else {
-            throw new Error(`${output}\nUnknown ERROR`);
+            throw new Error(`${output}\nUnknown ERROR: ${error}`);
         }
     }
 };
@@ -13753,7 +13753,7 @@ const runCommand = async (test, cwd, timeout) => {
             throw new Error(`${output}\n${error.message}`);
         }
         else {
-            throw new Error(`${output}\nUnknown ERROR`);
+            throw new Error(`${output}\nUnknown ERROR: ${error}`);
         }
     }
     // Eventually work off the the test type
