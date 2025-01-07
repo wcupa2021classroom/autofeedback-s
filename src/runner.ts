@@ -114,7 +114,7 @@ const waitForExit = async (child: ChildProcess, timeout: number): Promise<void> 
     const exitTimeout = setTimeout(() => {
       timedOut = true
       reject(new TestTimeoutError(`Setup timed out in ${timeout} milliseconds`))
-      kill(child.pid)
+      if (typeof child.pid === 'number') kill(child.pid)
     }, timeout)
 
     child.once('exit', (code: number, signal: string) => {
@@ -156,12 +156,12 @@ const runSetup = async (test: Test, cwd: string, timeout: number): Promise<void>
   // Start with a single new line
   process.stdout.write(indent('\n'))
 
-  setup.stdout.on('data', chunk => {
+  setup.stdout.on('data', (chunk) => {
     process.stdout.write(indent(chunk))
     output += chunk
   })
 
-  setup.stderr.on('data', chunk => {
+  setup.stderr.on('data', (chunk) => {
     process.stderr.write(indent(chunk))
     output += chunk
   })
@@ -204,12 +204,12 @@ const runCommand = async (test: Test, cwd: string, timeout: number) => {
   // Start with a single new line
   process.stdout.write(indent('\n'))
 
-  child.stdout.on('data', chunk => {
+  child.stdout.on('data', (chunk) => {
     process.stdout.write(indent(chunk))
     output += chunk
   })
 
-  child.stderr.on('data', chunk => {
+  child.stderr.on('data', (chunk) => {
     process.stderr.write(indent(chunk))
     output += chunk
   })
