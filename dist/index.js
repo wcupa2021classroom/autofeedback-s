@@ -13695,16 +13695,16 @@ const runSetup = async (test, cwd, timeout) => {
     }
     catch (error) {
         if (error instanceof TestTimeoutError) {
-            throw new TestTimeoutError(`${output}\n${error.message}`);
+            throw new TestTimeoutError(output + '\n' + error.message);
         }
         else if (error instanceof TestError) {
-            throw new TestError(`${output}\n${error.message}`);
+            throw new TestError(output + '\n' + error.message);
         }
         else if (error instanceof Error) {
-            throw new Error(`${output}\n${error.message}`);
+            throw new Error(output + '\n' + error.message);
         }
         else {
-            throw new Error(`${output}\nUnknown ERROR: ${error}`);
+            throw new Error(output + '\nUnknown ERROR: ' + `${error}`);
         }
     }
 };
@@ -13744,16 +13744,16 @@ const runCommand = async (test, cwd, timeout) => {
     }
     catch (error) {
         if (error instanceof TestTimeoutError) {
-            throw new TestTimeoutError(`${output}\n${error.message}`);
+            throw new TestTimeoutError(output + '\n' + error.message);
         }
         else if (error instanceof TestError) {
-            throw new TestError(`${output}\n${error.message}`);
+            throw new TestError(output + '\n' + error.message);
         }
         else if (error instanceof Error) {
-            throw new Error(`${output}\n${error.message}`);
+            throw new Error(output + '\n' + error.message);
         }
         else {
-            throw new Error(`${output}\nUnknown ERROR: ${error}`);
+            throw new Error(output + '\nUnknown ERROR: ' + `${error}`);
         }
     }
     // Eventually work off the the test type

@@ -170,13 +170,13 @@ const runSetup = async (test: Test, cwd: string, timeout: number): Promise<void>
     await waitForExit(setup, timeout)
   } catch (error) {
     if (error instanceof TestTimeoutError) {
-      throw new TestTimeoutError(`${output}\n${error.message}`)
+      throw new TestTimeoutError(output + '\n' + error.message)
     } else if (error instanceof TestError) {
-      throw new TestError(`${output}\n${error.message}`)
+      throw new TestError(output + '\n' + error.message)
     } else if (error instanceof Error) {
-      throw new Error(`${output}\n${error.message}`)
+      throw new Error(output + '\n' + error.message)
     } else {
-      throw new Error(`${output}\nUnknown ERROR: ${error}`)
+      throw new Error(output + '\nUnknown ERROR: ' + `${error}`)
     }
   }
 }
@@ -223,13 +223,13 @@ const runCommand = async (test: Test, cwd: string, timeout: number) => {
     await waitForExit(child, timeout)
   } catch (error) {
     if (error instanceof TestTimeoutError) {
-      throw new TestTimeoutError(`${output}\n${error.message}`)
+      throw new TestTimeoutError(output + '\n' + error.message)
     } else if (error instanceof TestError) {
-      throw new TestError(`${output}\n${error.message}`)
+      throw new TestError(output + '\n' + error.message)
     } else if (error instanceof Error) {
-      throw new Error(`${output}\n${error.message}`)
+      throw new Error(output + '\n' + error.message)
     } else {
-      throw new Error(`${output}\nUnknown ERROR: ${error}`)
+      throw new Error(output + '\nUnknown ERROR: ' + `${error}`)
     }
   }
 
