@@ -439,6 +439,9 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
       log(``)
       core.summary.addRaw(`#### 🏁 Passed ${test.name}`, true)
       core.summary.addRaw('```\n' + result + '\n```\n' || 'no output')
+      let notice = `🏁 Passed ${test.name}\n`
+      notice += '```\n' + result + '\n```\n'
+      core.notice(notice)
 
       if (test.points) {
         points += test.points
@@ -456,7 +459,8 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
       if (!test.extra) {
         failed = true
         if (error instanceof Error) {
-          core.error(error.message)
+          let eMsg = `🚧 Needs Repair - ${test.name}\n`
+          eMsg += '\n' + error.message + '\n\n'
           core.summary.addRaw(`#### 🚧 Needs Repair - ${test.name}`, true)
           core.summary.addRaw('```\n' + error.message + '\n```\n')
           const errors = []
@@ -468,12 +472,16 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
             core.summary.addRaw(sText, true)
             core.summary.addRaw('', true)
             const eText = `Note: https://www.debuggex.com will take the Expected text in the first box and the Actual text in the second box and show you a red line for where the test fails.`
+            eMsg += eText
             errors.push(eText)
           }
+          core.error(eMsg)
           //core.summary.write()
           log(errors.join(os.EOL))
         } else {
-          core.error(`${error}`)
+          let eMsg = `🚧 Needs Repair - ${test.name}\n`
+          eMsg += `${error}`
+          core.error(eMsg)
           core.summary.addRaw(`#### 🚧 Needs Repair - ${test.name}`, true)
           core.summary.addRaw(`Unknown exception : ${error}`, true)
 
