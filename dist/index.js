@@ -13948,7 +13948,7 @@ const runAll = async (tests, cwd) => {
             log(color.green(`🏁 completed - ${test.name}`));
             log(``);
             core.summary.addRaw(`#### 🏁 Passed ${test.name}`, true);
-            core.summary.addCodeBlock(result || 'no output');
+            core.summary.addRaw('```\n' + result + '\n```' || false);
             if (test.points) {
                 points += test.points;
             }
@@ -13966,7 +13966,7 @@ const runAll = async (tests, cwd) => {
                 failed = true;
                 if (error instanceof Error) {
                     core.summary.addRaw(`#### 🚧 Needs Repair - ${test.name}`, true);
-                    core.summary.addCodeBlock(error.message);
+                    core.summary.addRaw('```\n' + error.message + '\n```');
                     const errors = [];
                     errors.push(error.message);
                     if (error.message.indexOf('regex') != -1) {
