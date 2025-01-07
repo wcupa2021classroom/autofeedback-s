@@ -13928,6 +13928,8 @@ const runAll = async (tests, cwd) => {
     let failed = false;
     const passing = [];
     const failing = [];
+    const summaryMsgs = [];
+    const errMsgs = [];
     for (const test of tests) {
         numtests += 1;
         log('');
@@ -13976,8 +13978,13 @@ const runAll = async (tests, cwd) => {
                     const errors = [];
                     errors.push(error.message);
                     if (error.message.indexOf('regex') != -1) {
-                        const eText = `Note: https://www.debuggex.com will take the Expected text in the first box and the Actual text in the second box and show you a red line for where the test fails.`;
+                        const sText = '**' +
+                            test.name +
+                            ' Note:** Go to [debuggex](https://www.debuggex.com) for help with regular expression problems. It will take the *Expected* text in the first box and the *Actual* text in the second box and show you a *red line* for where the test fails.';
+                        const eText = `Note: Go to https://www.debuggex.com for help with regular expression problems. It will take the Expected text in the first box and the Actual text in the second box and show you a red line for where the test fails.`;
                         eMsg += eText;
+                        summaryMsgs.push(sText);
+                        errMsgs.push(test.name + ' ' + eText);
                         errors.push(eText);
                     }
                     //core.error(eMsg, eAnn)
@@ -14020,12 +14027,15 @@ const runAll = async (tests, cwd) => {
     }
     let text = `Tests Passed: ${passed}/${numtests}  
   Passing tests: ${passing}  
-  Failing tests: ${failing}  `;
-    text += '\nCheck Annotations for individual test results\n';
+  Failing tests: ${failing}\n`;
     core.summary.addRaw('## Test Summary', true);
     core.summary.addRaw(text, true);
+    core.summary.addRaw(summaryMsgs.join(os.EOL), true);
+    core.summary.addRaw('Check *Annotations* for individual test results', true);
     core.summary.write();
     //log(color.bold.bgCyan.black(text))
+    text += errMsgs.join(os.EOL) + '\n';
+    text += 'Check Annotations for individual test results\n';
     log(color.bold.bgCyan.black(text));
     log('');
     log('');
