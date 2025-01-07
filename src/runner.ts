@@ -437,8 +437,6 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
       log('')
       log(color.green(`🏁 completed - ${test.name}`))
       log(``)
-      core.summary.addRaw(`#### 🏁 Passed ${test.name}`, true)
-      core.summary.addRaw('```\n' + result + '\n```\n' || 'no output')
       let notice = `🏁 Passed ${test.name}\n`
       notice += '```\n' + result + '\n```\n'
       core.notice(notice)
@@ -461,16 +459,9 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
         if (error instanceof Error) {
           let eMsg = `🚧 Needs Repair - ${test.name}\n`
           eMsg += '\n' + error.message + '\n\n'
-          core.summary.addRaw(`#### 🚧 Needs Repair - ${test.name}`, true)
-          core.summary.addRaw('```\n' + error.message + '\n```\n')
           const errors = []
           errors.push(error.message)
           if (error.message.indexOf('regex') != -1) {
-            core.summary.addRaw('', true)
-            const sText =
-              '**Note:** [debuggex](https://www.debuggex.com) will take the *expected* text in the first box and the *actual* text in the second box and show you a *red line* for where the test fails.'
-            core.summary.addRaw(sText, true)
-            core.summary.addRaw('', true)
             const eText = `Note: https://www.debuggex.com will take the Expected text in the first box and the Actual text in the second box and show you a red line for where the test fails.`
             eMsg += eText
             errors.push(eText)
@@ -480,11 +471,8 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
           log(errors.join(os.EOL))
         } else {
           let eMsg = `🚧 Needs Repair - ${test.name}\n`
-          eMsg += `${error}`
+          eMsg += `Unknown Exception: ${error}`
           core.error(eMsg)
-          core.summary.addRaw(`#### 🚧 Needs Repair - ${test.name}`, true)
-          core.summary.addRaw(`Unknown exception : ${error}`, true)
-
           log('Unknown exception')
         }
       }
@@ -520,6 +508,7 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
   Failing tests: ${failing}  `
   core.summary.addRaw('## Test Summary', true)
   core.summary.addRaw(text, true)
+  core.summary.addRaw('Check *annotations* for individual test results', true)
   core.summary.write()
   //log(color.bold.bgCyan.black(text))
   log(color.bold.bgCyan.black(text))
