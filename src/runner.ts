@@ -456,6 +456,7 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
       if (!test.extra) {
         failed = true
         if (error instanceof Error) {
+          core.error(error.message)
           core.summary.addRaw(`#### 🚧 Needs Repair - ${test.name}`, true)
           core.summary.addRaw('```\n' + error.message + '\n```\n')
           const errors = []
@@ -472,8 +473,9 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
           //core.summary.write()
           log(errors.join(os.EOL))
         } else {
+          core.error(`${error}`)
           core.summary.addRaw(`#### 🚧 Needs Repair - ${test.name}`, true)
-          core.summary.addRaw(`Unknown exception`, true)
+          core.summary.addRaw(`Unknown exception : ${error}`, true)
 
           log('Unknown exception')
         }

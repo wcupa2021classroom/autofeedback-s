@@ -13965,6 +13965,7 @@ const runAll = async (tests, cwd) => {
             if (!test.extra) {
                 failed = true;
                 if (error instanceof Error) {
+                    core.error(error.message);
                     core.summary.addRaw(`#### 🚧 Needs Repair - ${test.name}`, true);
                     core.summary.addRaw('```\n' + error.message + '\n```\n');
                     const errors = [];
@@ -13981,8 +13982,9 @@ const runAll = async (tests, cwd) => {
                     log(errors.join(os.EOL));
                 }
                 else {
+                    core.error(`${error}`);
                     core.summary.addRaw(`#### 🚧 Needs Repair - ${test.name}`, true);
-                    core.summary.addRaw(`Unknown exception`, true);
+                    core.summary.addRaw(`Unknown exception : ${error}`, true);
                     log('Unknown exception');
                 }
             }
