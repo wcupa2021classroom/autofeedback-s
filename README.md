@@ -5,12 +5,14 @@
 - Initially changes were to deal with staying updated.
 - Now, a couple of new features exist.
     1. error output renders correctly 
-	2. all test results are put in the summary
-	3. focus is on tests passed rather than points
-	4. points and extra credit functionality still work
-	5. workflow has a badge that uses gradient colors (from other actions)
-	6. regex errors guide the user to [debuggex.com](https://www.debuggex.com)
-	7. other errors use a modified version of [Dr. Erickson's Diff output message function](https://github.com/DrErickson/autograding/blob/854db244b494c0fe3d3c7599cedd3033fd9ecae2/src/runner.ts#L168-L234) to help users find the error in their output. For the `included` match, it would be nice to identify some partial matches, but that will be for future changes.
+	2. summary test results are put in the summary
+        3. other test results are put in the annotations
+	4. focus is on tests passed rather than points
+	5. points and extra credit functionality still work
+	6. workflow has a badge that uses gradient colors (from other actions)
+	7. regex errors guide the user to [debuggex.com](https://www.debuggex.com)
+	8. exact errors use a modified version of [Dr. Erickson's Diff output message function](https://github.com/DrErickson/autograding/blob/854db244b494c0fe3d3c7599cedd3033fd9ecae2/src/runner.ts#L168-L234) to help users find the error in their output.
+        9. When an `included` test fails, the actual input will be fuzzy searched for the text it should include. It then displays the expected text and the closest match it could find. The fuzzy searching algorithm creates windows over the input and finds the best match using the [Jaro-Winkler Similarity](https://en.wikipedia.org/wiki/Jaro%E2%80%93Winkler_distance). This was implemented by [@SteveCookWCU](https://github.com/SteveCookWCU).
 
 ## Basic Usage
 The autograder is a GitHub Action that must be triggered as part of a CI workflow.
