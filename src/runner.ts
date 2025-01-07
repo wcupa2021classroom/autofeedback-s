@@ -151,20 +151,34 @@ const runSetup = async (test: Test, cwd: string, timeout: number): Promise<void>
     },
   })
 
+  let output = ''
+
   // Start with a single new line
   process.stdout.write(indent('\n'))
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setup.stdout.on('data', chunk => {
     process.stdout.write(indent(chunk))
+    output += chunk
   })
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setup.stderr.on('data', chunk => {
     process.stderr.write(indent(chunk))
+    output += chunk
   })
 
-  await waitForExit(setup, timeout)
+  try {
+    await waitForExit(setup, timeout)
+  } catch (error) {
+    if (error instanceof TestTimeoutError) {
+      throw new TestTimeoutError(`${output}\n${error.message}`)
+    } else if (error instanceof TestError) {
+      throw new TestError(`${output}\n${error.message}`)
+    } else if (error instanceof Error) {
+      throw new Error(`${output}\n${error.message}`)
+    } else {
+      throw new Error(`${output}\nUnknown ERROR`)
+    }
+  }
 }
 
 // function throwError(header:string,exp:string,act:string) {
