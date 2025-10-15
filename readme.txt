@@ -32,4 +32,11 @@ git checkout -b main
 git remote set-url origin https://github.com/wcupa2021classroom/autofeedback-s.git
 
 # 3. Push the branch to GitHub
+
+
+
+git add readme.txt
+git commit -m "updated readme.txt file"
+git push
+
 git push -u origin main
