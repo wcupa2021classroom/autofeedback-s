@@ -1,0 +1,45 @@
+{
+	"tests": [
+	{
+		"name": "Simple I/O test",
+		"setup": "",
+		"run": "timeout 5 echo \"Hello world\"",
+		"input": "",
+		"output": "Hello",
+		"comparison": "included",
+		"timeout": 1,
+		"points": 10
+	},
+	{
+		"name": "Exact match",
+		"setup": "",
+		"run": "timeout 5 echo \"Hello world\"",
+		"input": "",
+		"output": "Hello",
+		"comparison": "exact",
+		"timeout": 1,
+		"points": 3
+	},
+	{
+		"name": "Regex match",
+		"setup": "",
+		"run": "timeout 5 echo \"Hello world\"",
+		"input": "",
+		"output": "ello.*or[l]{1}d",
+		"comparison": "regex",
+		"timeout": 1,
+		"points": 5
+	},
+	{
+		"name": "Extra credit",
+		"setup": "",
+		"run": "timeout 5 make main && ./main",
+		"input": "",
+		"output": "Hello world",
+		"comparison": "included",
+		"timeout": 1,
+		"points": 7,
+		"extra": true
+	}
+	]
+}
